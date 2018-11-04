@@ -1,6 +1,8 @@
 // Import package for mongodb client
 const MongoClient = require('mongodb').MongoClient
 
+const database_name = "yummy_recipes_db"
+
 // Function for creating the initial database
 // Requires the url and name for the new database
 exports.createDatabase = function(database_url, database_name) {
@@ -30,7 +32,7 @@ exports.createCollection = function(database_url, database_name, collection_name
       });
 }
 
-exports.addResourceToCollection = function(database_url, database_name, collection_name, new_resource) {
+exports.addResourceToCollection = function(database_url, collection_name, new_resource) {
 
     console.log("New resource added to database: " + database_name)
 
@@ -49,22 +51,29 @@ exports.addResourceToCollection = function(database_url, database_name, collecti
       });
 }
 
-exports.getAllFromCollection = function(database_url, database_name, collection_name) {
+exports.getAllFromCollection = function(database_url, collection_name, callback) {
 
+    // Connect to the mongodb database
+    // Once done, runs the callback to execute the query to find all resources in the given collection
     MongoClient.connect(database_url, function(err, db) {
 
+        // If there's an error from the function call, exit with error message
         if (err) throw err;
+
+        // Create an instance of the mongodb database
         let dbo = db.db(database_name);
 
+        // Mongodb query to find all resources from the collection and save it to an array called results
+        // Once completed, pass the result as the parameter to the callback function
         dbo.collection(collection_name).find({}).toArray(function(err, result) {
           if (err) throw err;
-          console.log(result);
           db.close();
+          return callback(result); 
         });
     });
 }
 
-exports.getResourceFromCollection = function(database_url, database_name, collection_name, query_object) {
+exports.getResourceFromCollection = function(database_url, collection_name, query_object) {
 
     MongoClient.connect(database_url, function(err, db) {
 
@@ -80,7 +89,7 @@ exports.getResourceFromCollection = function(database_url, database_name, collec
 
 }
 
-exports.updateResource = function(database_url, database_name, collection_name, query_object, new_values_object) {
+exports.updateResource = function(database_url, collection_name, query_object, new_values_object) {
 
     MongoClient.connect(database_url, function(err, db) {
 
@@ -96,7 +105,7 @@ exports.updateResource = function(database_url, database_name, collection_name, 
 
 }
 
-exports.deleteArticle = function(database_url, database_name, collection_name, query_object) {
+exports.deleteArticle = function(database_url, collection_name, query_object) {
 
     MongoClient.connect(database_url, function(err, db) {
 

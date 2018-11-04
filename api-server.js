@@ -32,12 +32,18 @@ app.get('/', (req, res) => {
 
 app.get('/recipes', (req, res) => {
 
-	res.send('Hello World')
-
+	// Call controller to retrieve all recipes
+	// Once completed, callback function sends the result as a json string
+	recipes_controller.getAll(null, (recipes) => {
+		res.json(recipes)
+	})
 })
 
 app.post('/recipes', (req, res) => {
 
+	recipes_controller.add(req.body)
+	console.log("Recipe created")
+	res.send("New recipe created\n")
 
 })
 
