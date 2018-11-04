@@ -1,0 +1,19 @@
+{
+  "name": "304cem-backend-development-genarobedenko-7060234",
+  "version": "1.0.0",
+  "description": "Backend API for 304CEM Coursework Assignment",
+  "main": "api-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.coventry.ac.uk/304CEM-1819OCTJAN/304CEM-BACKEND-DEVELOPMENT-GenaroBedenko-7060234"
+  },
+  "author": "bedenkog",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongodb": "^3.1.8"
+  }
+}

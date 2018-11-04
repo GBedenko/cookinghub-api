@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
 
 app.get('/recipes', (req, res) => {
 
+	res.send('Hello World')
 
 })
 
