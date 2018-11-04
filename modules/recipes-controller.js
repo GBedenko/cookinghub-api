@@ -8,8 +8,10 @@ exports.add = function(recipeObject, callback){
     callback()
 };
 
-exports.getById = function(conData, req, callback){
-
+exports.getById = function(recipeId, callback){
+    database.getResourceFromCollection(database_url, recipes_collection_name, recipeId, function(recipe) {
+        return callback(recipe)
+    })
 };
 
 exports.getAll = function(err, callback){

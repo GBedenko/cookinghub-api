@@ -76,17 +76,17 @@ exports.getAllFromCollection = function(database_url, collection_name, callback)
     });
 }
 
-exports.getResourceFromCollection = function(database_url, collection_name, query_object) {
+exports.getResourceFromCollection = function(database_url, collection_name, resource_id, callback) {
 
     MongoClient.connect(database_url, function(err, db) {
 
         if (err) throw err;
         let dbo = db.db(database_name);
         
-        dbo.collection(collection_name).find(query_object).toArray(function(err, result) {
+        dbo.collection(collection_name).findOne({"_id": new mongodb.ObjectId(resource_id)}, function(err, result) {
             if (err) throw err;
-            console.log(result);
             db.close();
+            return callback(result)
         });
 });
 

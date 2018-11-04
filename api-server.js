@@ -39,6 +39,15 @@ app.get('/recipes', (req, res) => {
 	})
 })
 
+app.get('/recipes/:recipe_id', (req, res) => {
+
+	// Call controller to retrieve one recipe
+	// Once completed, callback function sends the result as a json string
+	recipes_controller.getById(req.params.recipe_id, (recipe) => {
+		res.json(recipe)
+	})
+})
+
 app.post('/recipes', (req, res) => {
 
 	// Call controller to create a new recipe from the provided request
