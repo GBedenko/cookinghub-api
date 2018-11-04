@@ -110,7 +110,7 @@ exports.updateResource = function(database_url, collection_name, recipeID, new_v
 
 }
 
-exports.deleteResourceById = function(database_url, collection_name, query_object) {
+exports.deleteResource = function(database_url, collection_name, recipeID) {
 
     // Connect to the mongodb database
     // Once done, runs the callback to execute the query to delete one resource matching the id
@@ -119,26 +119,9 @@ exports.deleteResourceById = function(database_url, collection_name, query_objec
         if (err) throw err;
         let dbo = db.db(database_name);
 
-        dbo.collection(collection_name).deleteOne({_id: new mongodb.ObjectID(query_object._id)}, function(err, obj) {
+        dbo.collection(collection_name).deleteOne({_id: new mongodb.ObjectID(recipeID)}, function(err, obj) {
           if (err) throw err;
-          console.log("Resource with id " + query_object._id + " has been deleted");
-          db.close();
-        });
-      });
-}
-
-exports.deleteResourceByQuery = function(database_url, collection_name, query_object) {
-
-    // Connect to the mongodb database
-    // Once done, runs the callback to execute the query to delete one resource matching the query
-    MongoClient.connect(database_url, function(err, db) {
-
-        if (err) throw err;
-        let dbo = db.db(database_name);
-
-        dbo.collection(collection_name).deleteOne(query_object, function(err, obj) {
-          if (err) throw err;
-          console.log("Resource with query " + query_object + " has been deleted");
+          console.log("Resource with id " + recipeID + " has been deleted");
           db.close();
         });
       });

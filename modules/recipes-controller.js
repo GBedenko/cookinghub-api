@@ -3,17 +3,20 @@ const recipes_collection_name = "recipes"
 
 const database = require('./mongodb')
 
+// Function to add a new recipe
 exports.add = function(recipeObject, callback){
     database.addResourceToCollection(database_url, recipes_collection_name, recipeObject)
     callback()
 };
 
+// Function to retrieve one recipe
 exports.getById = function(recipeId, callback){
     database.getResourceFromCollection(database_url, recipes_collection_name, recipeId, function(recipe) {
         return callback(recipe)
     })
 };
 
+// Function to retrieve all recipes
 exports.getAll = function(err, callback){
     // If there's an error from the function call, exit with error message
     if (err) throw err;
@@ -25,20 +28,14 @@ exports.getAll = function(err, callback){
     })
 };
 
+// Function to update a recipe
 exports.update = function(recipeID, newRecipeDetailsObject, callback){
     database.updateResource(database_url, recipes_collection_name, recipeID, newRecipeDetailsObject)
     callback()
 };
 
-exports.delete = function(recipeObject, callback){
-    // First try to delete the recipe by id if it was provided
-    try {
-        database.deleteResourceById(database_url, recipes_collection_name, recipeObject)
-    } // If not, try to delete by search query without the id
-    catch {
-        database.deleteResourceByQuery(database_url, recipes_collection_name, recipeObject)
-    } // Execute the callback provided by the route
-    finally {
-        callback()
-    }
+// Function to delete a recipe
+exports.delete = function(recipeID, recipeObject, callback){
+    database.deleteResource(database_url, recipes_collection_name, recipeID)    
+    callback()
 };

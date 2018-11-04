@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 	res.redirect('/recipes')
 })
 
+// GET Request to retrieve all recipes
 app.get('/recipes', (req, res) => {
 
 	// Call controller to retrieve all recipes
@@ -39,6 +40,7 @@ app.get('/recipes', (req, res) => {
 	})
 })
 
+// GET Request to retrieve one recipe
 app.get('/recipes/:recipe_id', (req, res) => {
 
 	// Call controller to retrieve one recipe
@@ -48,6 +50,7 @@ app.get('/recipes/:recipe_id', (req, res) => {
 	})
 })
 
+// POST Request to create a new recipe
 app.post('/recipes', (req, res) => {
 
 	// Call controller to create a new recipe from the provided request
@@ -57,22 +60,23 @@ app.post('/recipes', (req, res) => {
 	})
 })
 
+// PUT Request to update a recipe
 app.put('/recipes/:recipe_id', (req, res) => {
 
 	// Call controller to create a new recipe from the provided request
 	// Once completed, run the callback which sends the client a message and status code confirming the recipe was created
 	recipes_controller.update(req.params.recipe_id, req.body, () => {
-		res.status(200).send("Recipe with id : " + req.params.recipe_id + " has been updated\n")
+		res.status(200).send("Recipe with id: " + req.params.recipe_id + " has been updated\n")
 	})
 })
 
-// Needs to change to param.id
-app.delete('/recipes', (req, res) => {
+// DELETE Request to delete one recipe
+app.delete('/recipes/:recipe_id', (req, res) => {
 
-	// Call controller to delete a recipe corresponding to the HTML request's body
+	// Call controller to delete a recipe corresponding to the HTML request's recipe id
 	// Once completed, return back to client a message and status code confirming the recipe was deleted
-	recipes_controller.delete(req.body, () => {		
-		res.status(200).send("Recipe deleted\n")
+	recipes_controller.delete(req.params.recipe_id, req.body, () => {		
+		res.status(200).send("Recipe with id: " + req.params.recipe_id + " has been deleted\n")
 	})
 })
 
@@ -145,7 +149,6 @@ app.post('/logins', (req, res) => {
 
 
 })
-
 
 // Runs the server on provided port
 app.listen(port, () => console.log(`Server listening on port ${port}`));
