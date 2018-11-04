@@ -48,6 +48,16 @@ app.post('/recipes', (req, res) => {
 	})
 })
 
+app.put('/recipes/:recipe_id', (req, res) => {
+
+	// Call controller to create a new recipe from the provided request
+	// Once completed, run the callback which sends the client a message and status code confirming the recipe was created
+	recipes_controller.update(req.params.recipe_id, req.body, () => {
+		res.status(200).send("Recipe with id : " + req.params.recipe_id + " has been updated\n")
+	})
+})
+
+// Needs to change to param.id
 app.delete('/recipes', (req, res) => {
 
 	// Call controller to delete a recipe corresponding to the HTML request's body

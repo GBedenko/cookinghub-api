@@ -92,16 +92,18 @@ exports.getResourceFromCollection = function(database_url, collection_name, quer
 
 }
 
-exports.updateResource = function(database_url, collection_name, query_object, new_values_object) {
+exports.updateResource = function(database_url, collection_name, recipeID, new_values_object) {
 
+    // Connect to the mongodb database
+    // Once done, runs the callback to execute the query to update the resource matching the id
     MongoClient.connect(database_url, function(err, db) {
 
         if (err) throw err
         let dbo = db.db(database_name)
 
-        dbo.collection(collection_name).updateOne(query_object, new_values_object, function(err, res) {
+        dbo.collection(collection_name).updateOne({_id: new mongodb.ObjectID(recipeID)}, {$set:new_values_object}, function(err, res) {
           if (err) throw err;
-          console.log("Resource updated");
+          console.log("Resource with id " + recipeID + " has been updated");
           db.close();
         });
     });

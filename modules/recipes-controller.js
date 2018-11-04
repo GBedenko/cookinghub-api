@@ -23,8 +23,9 @@ exports.getAll = function(err, callback){
     })
 };
 
-exports.update = function(recipeObject){
-
+exports.update = function(recipeID, newRecipeDetailsObject, callback){
+    database.updateResource(database_url, recipes_collection_name, recipeID, newRecipeDetailsObject)
+    callback()
 };
 
 exports.delete = function(recipeObject, callback){
