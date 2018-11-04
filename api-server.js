@@ -8,10 +8,20 @@ app.use(express.json());
 // Port this server will run on
 const port = 8080;
 
+const database_controller = require('./modules/database-controller')
+const favourite_recipes_controller = require('./modules/favourite-recipes-controller')
+const images_controller = require('./modules/images-controller')
+const logins_controller = require('./modules/logins-controller')
+const notifications_controller = require('./modules/notifications-controller')
+const ratings_controller = require('./modules/ratings-controller')
+const recipe_images_controller = require('./modules/recipe-images-controller')
+const recipes_controller = require('./modules/recipes-controller')
+const users_controller = require('./modules/users-controller')
+
 // Create a new database
 app.get('/createDatabase', (req, res) => {
 
-	database.createDatabase()
+	database_controller.create()
 	console.log('Articles table created')
 })
 
@@ -55,7 +65,6 @@ app.get('/images', (req,res) => {
 
 })
 
-
 app.post('/images', (req,res) => {
 
 
@@ -65,7 +74,6 @@ app.get('/notifications', (req, res) => {
 
 
 })
-
 
 app.post('/notifications', (req,res) => {
 
