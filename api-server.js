@@ -41,10 +41,20 @@ app.get('/recipes', (req, res) => {
 
 app.post('/recipes', (req, res) => {
 
-	recipes_controller.add(req.body)
-	console.log("Recipe created")
-	res.send("New recipe created\n")
+	// Call controller to create a new recipe from the provided request
+	// Once completed, run the callback which sends the client a message and status code confirming the recipe was created
+	recipes_controller.add(req.body, () => {
+		res.status(200).send("New recipe created\n")
+	})
+})
 
+app.delete('/recipes', (req, res) => {
+
+	// Call controller to delete a recipe corresponding to the HTML request's body
+	// Once completed, return back to client a message and status code confirming the recipe was deleted
+	recipes_controller.delete(req.body, () => {		
+		res.status(200).send("Recipe deleted\n")
+	})
 })
 
 app.get('/users', (req, res) => {

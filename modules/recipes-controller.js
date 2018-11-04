@@ -3,8 +3,9 @@ const recipes_collection_name = "recipes"
 
 const database = require('./mongodb')
 
-exports.add = function(recipeObject){
+exports.add = function(recipeObject, callback){
     database.addResourceToCollection(database_url, recipes_collection_name, recipeObject)
+    callback()
 };
 
 exports.getById = function(conData, req, callback){
@@ -26,6 +27,15 @@ exports.update = function(recipeObject){
 
 };
 
-exports.delete = function(recipeObject){
-
+exports.delete = function(recipeObject, callback){
+    // First try to delete the recipe by id if it was provided
+    try {
+        database.deleteResourceById(database_url, recipes_collection_name, recipeObject)
+    } // If not, try to delete by search query without the id
+    catch {
+        database.deleteResourceByQuery(database_url, recipes_collection_name, recipeObject)
+    } // Execute the callback provided by the route
+    finally {
+        callback()
+    }
 };
