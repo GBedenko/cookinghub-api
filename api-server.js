@@ -19,7 +19,7 @@ const recipes_controller = require('./modules/recipes-controller')
 const users_controller = require('./modules/users-controller')
 
 // Create a new database
-app.get('/createDatabase', (req, res) => {
+app.get('/api/v1.0/createDatabase', (req, res) => {
 
 	database_controller.create()
 	console.log('Articles table created')
@@ -30,87 +30,125 @@ app.get('/', (req, res) => {
 	res.redirect('/recipes')
 })
 
-app.get('/recipes', (req, res) => {
+// GET Request to retrieve all recipes
+app.get('/api/v1.0/recipes', (req, res) => {
 
-	res.send('Hello World')
-
+	// Call controller to retrieve all recipes
+	// Once completed, callback function sends the result as a json string
+	recipes_controller.getAll(null, (recipes) => {
+		res.json(recipes)
+	})
 })
 
-app.post('/recipes', (req, res) => {
+// GET Request to retrieve one recipe
+app.get('/api/v1.0/recipes/:recipe_id', (req, res) => {
 
-
+	// Call controller to retrieve one recipe
+	// Once completed, callback function sends the result as a json string
+	recipes_controller.getById(req.params.recipe_id, (recipe) => {
+		res.json(recipe)
+	})
 })
 
-app.get('/users', (req, res) => {
+// POST Request to create a new recipe
+app.post('/api/v1.0/recipes', (req, res) => {
 
-
+	// Call controller to create a new recipe from the provided request
+	// Once completed, run the callback which sends the client a message and status code confirming the recipe was created
+	recipes_controller.add(req.body, () => {
+		res.status(200).send("New recipe created\n")
+	})
 })
 
-app.post('/users', (req, res) => {
+// PUT Request to update a recipe
+app.put('/api/v1.0/recipes/:recipe_id', (req, res) => {
 
-
+	// Call controller to create a new recipe from the provided request
+	// Once completed, run the callback which sends the client a message and status code confirming the recipe was created
+	recipes_controller.update(req.params.recipe_id, req.body, () => {
+		res.status(200).send("Recipe with id: " + req.params.recipe_id + " has been updated\n")
+	})
 })
 
-app.get('/ratings', (req, res) => {
+// DELETE Request to delete one recipe
+app.delete('/api/v1.0/recipes/:recipe_id', (req, res) => {
 
-
+	// Call controller to delete a recipe corresponding to the HTML request's recipe id
+	// Once completed, return back to client a message and status code confirming the recipe was deleted
+	recipes_controller.delete(req.params.recipe_id, req.body, () => {		
+		res.status(200).send("Recipe with id: " + req.params.recipe_id + " has been deleted\n")
+	})
 })
 
-app.post('/ratings', (req, res) => {
-
-
-})
-
-app.get('/images', (req,res) => {
-
-
-})
-
-app.post('/images', (req,res) => {
-
-
-})
-
-app.get('/notifications', (req, res) => {
-
-
-})
-
-app.post('/notifications', (req,res) => {
-
-
-})
-
-app.get('/favourite_recipes', (req, res) => {
-
-
-})
-
-app.post('/favourite_recipes', (req, res) => {
+app.get('/api/v1.0/users', (req, res) => {
 
 
 })
 
-app.get('/recipe_images', (req, res) => {
+app.post('/api/v1.0/users', (req, res) => {
 
 
 })
 
-app.post('/recipe_images', (req, res) => {
+app.get('/api/v1.0/ratings', (req, res) => {
 
 
 })
 
-app.get('/logins', (req, res) => {
+app.post('/api/v1.0/ratings', (req, res) => {
 
 
 })
 
-app.post('/logins', (req, res) => {
+app.get('/api/v1.0/images', (req,res) => {
 
 
 })
 
+app.post('/api/v1.0/images', (req,res) => {
+
+
+})
+
+app.get('/api/v1.0/notifications', (req, res) => {
+
+
+})
+
+app.post('/api/v1.0/notifications', (req,res) => {
+
+
+})
+
+app.get('/api/v1.0/favourite_recipes', (req, res) => {
+
+
+})
+
+app.post('/api/v1.0/favourite_recipes', (req, res) => {
+
+
+})
+
+app.get('/api/v1.0/recipe_images', (req, res) => {
+
+
+})
+
+app.post('/api/v1.0/recipe_images', (req, res) => {
+
+
+})
+
+app.get('/api/v1.0/logins', (req, res) => {
+
+
+})
+
+app.post('/api/v1.0/logins', (req, res) => {
+
+
+})
 
 // Runs the server on provided port
 app.listen(port, () => console.log(`Server listening on port ${port}`));
