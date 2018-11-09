@@ -1,5 +1,5 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection_name = "recipes"
+const recipes_collection = "recipes"
 
 const database = require('./mongodb')
 
