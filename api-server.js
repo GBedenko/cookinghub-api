@@ -1,11 +1,11 @@
 'use strict'
 
-console.log("Server Booting Up...");
+console.log("Server Booting Up...")
 
 // Using express as my web server, create instance and set attributes
-const express = require('express');
-const app = express();
-app.use(express.json());
+const express = require('express')
+const app = express()
+app.use(express.json())
 
 // Port this server will run on
 const port = 8080;
@@ -32,7 +32,7 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const recipes = await recipesController.getAll()
 
-	res.status(200).send(recipes)
+	res.status(200).send(JSON.stringify(recipes, null, 2))
 })
 
 // GET Request to retrieve one recipe
@@ -41,7 +41,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	// Call controller to retrieve one recipe
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
-	res.status(200).json(recipe)
+	res.status(200).send(JSON.stringify(recipe, null, 2))
 })
 
 // POST Request to create a new recipe
