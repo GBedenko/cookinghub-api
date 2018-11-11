@@ -124,26 +124,6 @@ app.post('/api/v1.0/notifications', (req,res) => {
 
 })
 
-app.get('/api/v1.0/favourite_recipes', (req, res) => {
-
-
-})
-
-app.post('/api/v1.0/favourite_recipes', (req, res) => {
-
-
-})
-
-app.get('/api/v1.0/recipe_images', (req, res) => {
-
-
-})
-
-app.post('/api/v1.0/recipe_images', (req, res) => {
-
-
-})
-
 app.get('/api/v1.0/logins', (req, res) => {
 
 
