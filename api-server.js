@@ -11,7 +11,7 @@ app.use(express.json())
 const port = 8080;
 
 const databaseController = require('./modules/database-controller')
-const favourite_recipesController = require('./modules/favourite-recipes-controller')
+const favouriteRecipesController = require('./modules/favourite-recipes-controller')
 const imagesController = require('./modules/images-controller')
 const loginsController = require('./modules/logins-controller')
 const notificationsController = require('./modules/notifications-controller')
