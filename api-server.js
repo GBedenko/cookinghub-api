@@ -104,14 +104,63 @@ app.post('/api/v1.0/ratings', (req, res) => {
 
 })
 
-app.get('/api/v1.0/images', (req,res) => {
+// GET Request to retrieve all image
+app.get('/api/v1.0/images', async(req, res) => {
 
+	// Call controller to retrieve all images
+	// Waits for response from controller before continuing (async/await)
+	const images = await imagesController.getAll()
 
+	res.status(200).send(JSON.stringify(images, null, 2))
 })
 
-app.post('/api/v1.0/images', (req,res) => {
+// GET Request to retrieve one image
+app.get('/api/v1.0/images/:image_id', async(req, res) => {
 
+	// Call controller to retrieve one image
+	const image = await imagesController.getById(req.params.image_id)
 
+	res.status(200).send(JSON.stringify(image, null, 2))
+})
+
+// POST Request to create a new image
+app.post('/api/v1.0/images', async(req, res) => {
+
+	// Call controller to create a new image from the provided request
+	const response = await imagesController.add(req.body)
+	
+	if(response) {
+		res.status(200).send("image added succesfully\n")
+	} else {
+		res.status(400).send("There was an error posting your image\n")
+	}
+})
+
+// PUT Request to update a image
+app.put('/api/v1.0/images/:image_id', async(req, res) => {
+
+	// Call controller to create a new image from the provided request
+	const imageUpdateResponse = await imagesController.update(req.params.image_id, req.body)
+
+	if(imageUpdateResponse) {
+		res.status(200).send("image with id: " + req.params.image_id + " has been updated\n")
+	} else {
+		res.status(400).send("There was an error updating your image\n")
+	}	
+})
+
+// DELETE Request to delete one image
+app.delete('/api/v1.0/images/:image_id', async(req, res) => {
+
+	// Call controller to delete a image corresponding to the HTML request's image id
+	// Once completed, return back to client a message and status code confirming the image was deleted
+	const imageDeleteResponse = await imagesController.delete(req.params.image_id)
+
+	if(imageDeleteResponse) {
+		res.status(200).send("image with id: " + req.params.image_id + " has been deleted\n")
+	} else {
+		res.status(400).send("There was an error deleting your image\n")
+	}
 })
 
 app.get('/api/v1.0/notifications', (req, res) => {
