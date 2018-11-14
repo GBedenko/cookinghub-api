@@ -143,14 +143,64 @@ app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 	}
 })
 
-app.get('/api/v1.0/ratings', (req, res) => {
+// GET Request to retrieve all ratings
+app.get('/api/v1.0/ratings', async(req, res) => {
 
+	// Call controller to retrieve all ratings
+	// Waits for response from controller before continuing (async/await)
+	const ratings = await ratingsController.getAll()
 
+	res.status(200).send(JSON.stringify(ratings, null, 2))
 })
 
-app.post('/api/v1.0/ratings', (req, res) => {
+// GET Request to retrieve one rating
+app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
+	// Call controller to retrieve one rating
+	const rating = await ratingsController.getById(req.params.rating_id)
 
+	res.status(200).send(JSON.stringify(rating, null, 2))
+})
+
+// POST Request to create a new rating
+app.post('/api/v1.0/ratings', async(req, res) => {
+
+	// Call controller to create a new rating from the provided request
+	const response = await ratingsController.add(req.body)
+	
+	if(response) {
+		res.status(200).send("Rating added succesfully\n")
+	} else {
+		res.status(400).send("There was an error posting your rating\n")
+	}
+})
+
+// PUT Request to update a rating
+app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
+
+	// Call controller to create a new rating from the provided request
+	const ratingUpdateResponse = await ratingsController.update(req.params.rating_id, req.body)
+
+	if(ratingUpdateResponse) {
+		res.status(200).send("Rating with id: " + req.params.rating_id + " has been updated\n")
+	} else {
+		res.status(400).send("There was an error updating your rating\n")
+	}	
+})
+
+// DELETE Request to delete one rating
+app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
+
+	// Call controller to delete a rating corresponding to the HTML request's rating id
+	// Once completed, return back to client a message and status code confirming the rating was deleted
+	const ratingDeleteResponse = await ratingsController.delete(req.params.rating_id)
+
+	if(ratingDeleteResponse) {
+		res.status(200).send("Rating with id: " + req.params.rating_id + " has been deleted\n")
+	} else {
+		res.status(400).send("There was an error deleting your rating\n")
+		ratings_endpoints_functionality
+	}
 })
 
 app.get('/api/v1.0/images', (req,res) => {
