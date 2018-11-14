@@ -10,13 +10,10 @@ app.use(express.json())
 // Port this server will run on
 const port = 8080;
 
-const databaseController = require('./modules/database-controller')
-const favouriteRecipesController = require('./modules/favourite-recipes-controller')
 const imagesController = require('./modules/images-controller')
 const loginsController = require('./modules/logins-controller')
 const notificationsController = require('./modules/notifications-controller')
 const ratingsController = require('./modules/ratings-controller')
-const recipeImagesController = require('./modules/recipe-images-controller')
 const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
 
@@ -85,7 +82,7 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 })
 
 // GET Request to retrieve all users
-app.get('/api/v1.0/users', (req, res) => {
+app.get('/api/v1.0/users', async(req, res) => {
 
 	// Call controller to retrieve all users
 	// Waits for response from controller before continuing (async/await)
