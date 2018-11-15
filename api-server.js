@@ -264,14 +264,63 @@ app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 	}
 })
 
-app.get('/api/v1.0/notifications', (req, res) => {
+// GET Request to retrieve all notifications
+app.get('/api/v1.0/notifications', async(req, res) => {
 
+	// Call controller to retrieve all notifications
+	// Waits for response from controller before continuing (async/await)
+	const notifications = await notificationsController.getAll()
 
+	res.status(200).send(JSON.stringify(notifications, null, 2))
 })
 
-app.post('/api/v1.0/notifications', (req,res) => {
+// GET Request to retrieve one notification
+app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
+	// Call controller to retrieve one notification
+	const notification = await notificationsController.getById(req.params.notification_id)
 
+	res.status(200).send(JSON.stringify(notification, null, 2))
+})
+
+// POST Request to create a new notification
+app.post('/api/v1.0/notifications', async(req, res) => {
+
+	// Call controller to create a new notification from the provided request
+	const response = await notificationsController.add(req.body)
+	
+	if(response) {
+		res.status(200).send("notification added succesfully\n")
+	} else {
+		res.status(400).send("There was an error posting your notification\n")
+	}
+})
+
+// PUT Request to update a notification
+app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
+
+	// Call controller to create a new notification from the provided request
+	const notificationUpdateResponse = await notificationsController.update(req.params.notification_id, req.body)
+
+	if(notificationUpdateResponse) {
+		res.status(200).send("notification with id: " + req.params.notification_id + " has been updated\n")
+	} else {
+		res.status(400).send("There was an error updating your notification\n")
+	}	
+})
+
+// DELETE Request to delete one notification
+app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
+
+	// Call controller to delete a notification corresponding to the HTML request's notification id
+	// Once completed, return back to client a message and status code confirming the notification was deleted
+	const notificationDeleteResponse = await notificationsController.delete(req.params.notification_id)
+
+	if(notificationDeleteResponse) {
+		res.status(200).send("notification with id: " + req.params.notification_id + " has been deleted\n")
+	} else {
+		res.status(400).send("There was an error deleting your notification\n")
+	}
 })
 
 app.get('/api/v1.0/logins', (req, res) => {
