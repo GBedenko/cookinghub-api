@@ -17,6 +17,11 @@ const ratingsController = require('./modules/ratings-controller')
 const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
 
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*")
+	next()
+})
+
 // Home root currently redirects to /recipes
 app.get('/api/v1.0/', (req, res) => {
 	res.redirect('/api/v1.0/recipes')
