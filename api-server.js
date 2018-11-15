@@ -323,14 +323,63 @@ app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	}
 })
 
-app.get('/api/v1.0/logins', (req, res) => {
+// GET Request to retrieve all logins
+app.get('/api/v1.0/logins', async(req, res) => {
 
+	// Call controller to retrieve all logins
+	// Waits for response from controller before continuing (async/await)
+	const logins = await loginsController.getAll()
 
+	res.status(200).send(JSON.stringify(logins, null, 2))
 })
 
-app.post('/api/v1.0/logins', (req, res) => {
+// GET Request to retrieve one login
+app.get('/api/v1.0/logins/:login_id', async(req, res) => {
 
+	// Call controller to retrieve one login
+	const login = await loginsController.getById(req.params.login_id)
 
+	res.status(200).send(JSON.stringify(login, null, 2))
+})
+
+// POST Request to create a new login
+app.post('/api/v1.0/logins', async(req, res) => {
+
+	// Call controller to create a new login from the provided request
+	const response = await loginsController.add(req.body)
+	
+	if(response) {
+		res.status(200).send("login added succesfully\n")
+	} else {
+		res.status(400).send("There was an error posting your login\n")
+	}
+})
+
+// PUT Request to update a login
+app.put('/api/v1.0/logins/:login_id', async(req, res) => {
+
+	// Call controller to create a new login from the provided request
+	const loginUpdateResponse = await loginsController.update(req.params.login_id, req.body)
+
+	if(loginUpdateResponse) {
+		res.status(200).send("login with id: " + req.params.login_id + " has been updated\n")
+	} else {
+		res.status(400).send("There was an error updating your login\n")
+	}	
+})
+
+// DELETE Request to delete one login
+app.delete('/api/v1.0/logins/:login_id', async(req, res) => {
+
+	// Call controller to delete a login corresponding to the HTML request's login id
+	// Once completed, return back to client a message and status code confirming the login was deleted
+	const loginDeleteResponse = await loginsController.delete(req.params.login_id)
+
+	if(loginDeleteResponse) {
+		res.status(200).send("login with id: " + req.params.login_id + " has been deleted\n")
+	} else {
+		res.status(400).send("There was an error deleting your login\n")
+	}
 })
 
 // Runs the server on provided port
