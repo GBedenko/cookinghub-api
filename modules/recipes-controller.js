@@ -1,7 +1,7 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
 const recipes_collection = "recipes"
 
-const database = require('./mongodb')
+const database = require('./database')
 
 // Function to add a new recipe
 exports.add = async(recipeObject) => {

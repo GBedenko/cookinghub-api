@@ -22,11 +22,6 @@ app.use((req, res, next) => {
 	next()
 })
 
-// Home root currently redirects to /recipes
-app.get('/api/v1.0/', (req, res) => {
-	res.redirect('/api/v1.0/recipes')
-})
-
 // GET Request to retrieve all recipes
 app.get('/api/v1.0/recipes', async(req, res) => {
 
@@ -34,7 +29,7 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const recipes = await recipesController.getAll()
 
-	res.status(200).send(JSON.stringify(recipes, null, 2))
+	res.status(200).send(recipes)
 })
 
 // GET Request to retrieve one recipe
@@ -43,7 +38,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	// Call controller to retrieve one recipe
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
-	res.status(200).send(JSON.stringify(recipe, null, 2))
+	res.status(200).send(recipe)
 })
 
 // POST Request to create a new recipe
@@ -93,7 +88,7 @@ app.get('/api/v1.0/users', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const users = await usersController.getAll()
 
-	res.status(200).send(JSON.stringify(users, null, 2))
+	res.status(200).send(users)
 })
 
 // GET Request to retrieve one user
@@ -102,7 +97,7 @@ app.get('/api/v1.0/user/:user_id', async(req, res) => {
 	// Call controller to retrieve one user
 	const user = await usersController.getById(req.params.user_id)
 
-	res.status(200).send(JSON.stringify(user, null, 2))
+	res.status(200).send(user)
 })
 
 // POST Request to create a new user
@@ -152,7 +147,7 @@ app.get('/api/v1.0/ratings', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const ratings = await ratingsController.getAll()
 
-	res.status(200).send(JSON.stringify(ratings, null, 2))
+	res.status(200).send(ratings)
 })
 
 // GET Request to retrieve one rating
@@ -161,7 +156,7 @@ app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	// Call controller to retrieve one rating
 	const rating = await ratingsController.getById(req.params.rating_id)
 
-	res.status(200).send(JSON.stringify(rating, null, 2))
+	res.status(200).send(rating)
 })
 
 // POST Request to create a new rating
@@ -212,7 +207,7 @@ app.get('/api/v1.0/images', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const images = await imagesController.getAll()
 
-	res.status(200).send(JSON.stringify(images, null, 2))
+	res.status(200).send(images)
 })
 
 // GET Request to retrieve one image
@@ -221,7 +216,7 @@ app.get('/api/v1.0/images/:image_id', async(req, res) => {
 	// Call controller to retrieve one image
 	const image = await imagesController.getById(req.params.image_id)
 
-	res.status(200).send(JSON.stringify(image, null, 2))
+	res.status(200).send(image)
 })
 
 // POST Request to create a new image
@@ -271,7 +266,7 @@ app.get('/api/v1.0/notifications', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const notifications = await notificationsController.getAll()
 
-	res.status(200).send(JSON.stringify(notifications, null, 2))
+	res.status(200).send(notifications)
 })
 
 // GET Request to retrieve one notification
@@ -280,7 +275,7 @@ app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	// Call controller to retrieve one notification
 	const notification = await notificationsController.getById(req.params.notification_id)
 
-	res.status(200).send(JSON.stringify(notification, null, 2))
+	res.status(200).send(notification)
 })
 
 // POST Request to create a new notification
@@ -330,7 +325,7 @@ app.get('/api/v1.0/logins', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const logins = await loginsController.getAll()
 
-	res.status(200).send(JSON.stringify(logins, null, 2))
+	res.status(200).send(logins)
 })
 
 // GET Request to retrieve one login
@@ -339,7 +334,7 @@ app.get('/api/v1.0/logins/:login_id', async(req, res) => {
 	// Call controller to retrieve one login
 	const login = await loginsController.getById(req.params.login_id)
 
-	res.status(200).send(JSON.stringify(login, null, 2))
+	res.status(200).send(login)
 })
 
 // POST Request to create a new login

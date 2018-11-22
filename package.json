@@ -4,7 +4,12 @@
   "description": "Backend API for 304CEM Coursework Assignment",
   "main": "api-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api-server.js",
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true
   },
   "repository": {
     "type": "git",
@@ -14,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
-    "mongodb": "^3.1.8"
+    "jest": "^23.6.0",
+    "mongodb": "^3.1.10"
   }
 }
