@@ -1,7 +1,7 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
 const notifications_collection = "notifications"
 
-const database = require('./mongodb')
+const database = require('./database')
 
 // Function to add a new notification
 exports.add = async(notificationObject) => {

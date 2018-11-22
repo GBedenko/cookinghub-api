@@ -1,7 +1,7 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
 const images_collection = "images"
 
-const database = require('./mongodb')
+const database = require('./database')
 
 // Function to add a new image
 exports.add = async(imageObject) => {

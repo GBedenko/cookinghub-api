@@ -1,7 +1,7 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
 const users_collection = "users"
 
-const database = require('./mongodb')
+const database = require('./database')
 
 // Function to add a new user
 exports.add = async(userObject) => {
