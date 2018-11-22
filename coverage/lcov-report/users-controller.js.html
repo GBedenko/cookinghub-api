@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for recipes-controller.js</title>
+    <title>Code coverage report for users-controller.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> recipes-controller.js
+      <a href="index.html">All files</a> users-controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -166,65 +166,65 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection = "recipes"
+const users_collection = "users"
 &nbsp;
 const database = require('./mongodb-database')
 &nbsp;
-// Function to add a new recipe
-exports.add = async(recipeObject) =&gt; {
-    
-    let addRecipe = database.addResourceToCollection(database_url, recipes_collection, recipeObject)
+// Function to add a new user
+exports.add = async(userObject) =&gt; {
+&nbsp;
+    let addUser = database.addResourceToCollection(database_url, users_collection, userObject)
                         .then((result) =&gt; result)
 &nbsp;
-    let addRecipeResponse = await addRecipe
+    let addUserResponse = await addUser
 &nbsp;
-    return addRecipeResponse
+    return addUserResponse
 }
 &nbsp;
-// Function to retrieve one recipe
-exports.getById = async(recipeId) =&gt; {
-    
-    let getRecipe = database.getResourceFromCollection(database_url, recipes_collection, recipeId)
-                        .then((recipe) =&gt; recipe)
-    
-    let recipe = await getRecipe
+// Function to retrieve one user
+exports.getById = async(userId) =&gt; {
 &nbsp;
-    return recipe
+    let getUser = database.getResourceFromCollection(database_url, users_collection, userId)
+                        .then((user) =&gt; user)
+    
+    let user = await getUser
+&nbsp;
+    return user
 }
 &nbsp;
-// Function to retrieve all recipes
+// Function to retrieve all users
 exports.getAll = async() =&gt; {
-    
-    let results = database.getAllFromCollection(database_url, recipes_collection)
+&nbsp;
+    let results = database.getAllFromCollection(database_url, users_collection)
                     .then((results) =&gt; results) // Obtains the result from the Promise object
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
 &nbsp;
-    // Return the list of recipes
+    // Return the list of users
     return final_result
 }
 &nbsp;
-// Function to update a recipe
-exports.update = async(recipeID, newRecipeDetailsObject) =&gt; {
+// Function to update a user
+exports.update = async(userID, newUserDetailsObject) =&gt; {
+    
+    let updateUser = database.updateResource(database_url, users_collection, userID, newUserDetailsObject)
+                            .then((user) =&gt; user)
 &nbsp;
-    let updateRecipe = database.updateResource(database_url, recipes_collection, recipeID, newRecipeDetailsObject)
-                            .then((recipe) =&gt; recipe)
+    let updateUserResponse = await updateUser
 &nbsp;
-    let updateRecipeResponse = await updateRecipe
-&nbsp;
-    return updateRecipeResponse
+    return updateUserResponse
 }
 &nbsp;
-// Function to delete a recipe
-exports.delete = async(recipeID) =&gt; {
+// Function to delete a user
+exports.delete = async(userID) =&gt; {
 &nbsp;
-    let deleteRecipe = database.deleteResource(database_url, recipes_collection, recipeID)
-                            .then((recipe) =&gt; recipe)
+    let deleteUser = database.deleteResource(database_url, users_collection, userID)
+                            .then((user) =&gt; user)
 &nbsp;
-    let deleteRecipeResponse = await deleteRecipe
+    let deleteUserResponse = await deleteUser
 &nbsp;
-    return deleteRecipeResponse
+    return deleteUserResponse
 }
 &nbsp;</pre></td></tr>
 </table></pre>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for recipes-controller.js</title>
+    <title>Code coverage report for notifications-controller.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> recipes-controller.js
+      <a href="index.html">All files</a> notifications-controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -166,65 +166,65 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection = "recipes"
+const notifications_collection = "notifications"
 &nbsp;
 const database = require('./mongodb-database')
 &nbsp;
-// Function to add a new recipe
-exports.add = async(recipeObject) =&gt; {
+// Function to add a new notification
+exports.add = async(notificationObject) =&gt; {
     
-    let addRecipe = database.addResourceToCollection(database_url, recipes_collection, recipeObject)
+    let addNotification = database.addResourceToCollection(database_url, notifications_collection, notificationObject)
                         .then((result) =&gt; result)
 &nbsp;
-    let addRecipeResponse = await addRecipe
+    let addNotificationResponse = await addNotification
 &nbsp;
-    return addRecipeResponse
+    return addNotificationResponse
 }
 &nbsp;
-// Function to retrieve one recipe
-exports.getById = async(recipeId) =&gt; {
+// Function to retrieve one notification
+exports.getById = async(notificationId) =&gt; {
     
-    let getRecipe = database.getResourceFromCollection(database_url, recipes_collection, recipeId)
-                        .then((recipe) =&gt; recipe)
+    let getNotification = database.getResourceFromCollection(database_url, notifications_collection, notificationId)
+                        .then((notification) =&gt; notification)
     
-    let recipe = await getRecipe
+    let notification = await getNotification
 &nbsp;
-    return recipe
+    return notification
 }
 &nbsp;
-// Function to retrieve all recipes
+// Function to retrieve all notifications
 exports.getAll = async() =&gt; {
     
-    let results = database.getAllFromCollection(database_url, recipes_collection)
+    let results = database.getAllFromCollection(database_url, notifications_collection)
                     .then((results) =&gt; results) // Obtains the result from the Promise object
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
 &nbsp;
-    // Return the list of recipes
+    // Return the list of notifications
     return final_result
 }
 &nbsp;
-// Function to update a recipe
-exports.update = async(recipeID, newRecipeDetailsObject) =&gt; {
+// Function to update a notification
+exports.update = async(notificationID, newNotificationDetailsObject) =&gt; {
 &nbsp;
-    let updateRecipe = database.updateResource(database_url, recipes_collection, recipeID, newRecipeDetailsObject)
-                            .then((recipe) =&gt; recipe)
+    let updateNotification = database.updateResource(database_url, notifications_collection, notificationID, newNotificationDetailsObject)
+                            .then((notification) =&gt; notification)
 &nbsp;
-    let updateRecipeResponse = await updateRecipe
+    let updateNotificationResponse = await updateNotification
 &nbsp;
-    return updateRecipeResponse
+    return updateNotificationResponse
 }
 &nbsp;
-// Function to delete a recipe
-exports.delete = async(recipeID) =&gt; {
+// Function to delete a notification
+exports.delete = async(notificationID) =&gt; {
 &nbsp;
-    let deleteRecipe = database.deleteResource(database_url, recipes_collection, recipeID)
-                            .then((recipe) =&gt; recipe)
+    let deleteNotification = database.deleteResource(database_url, notifications_collection, notificationID)
+                            .then((notification) =&gt; notification)
 &nbsp;
-    let deleteRecipeResponse = await deleteRecipe
+    let deleteNotificationResponse = await deleteNotification
 &nbsp;
-    return deleteRecipeResponse
+    return deleteNotificationResponse
 }
 &nbsp;</pre></td></tr>
 </table></pre>

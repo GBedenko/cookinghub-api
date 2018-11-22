@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for recipes-controller.js</title>
+    <title>Code coverage report for images-controller.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> recipes-controller.js
+      <a href="index.html">All files</a> images-controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -166,65 +166,65 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection = "recipes"
+const images_collection = "images"
 &nbsp;
 const database = require('./mongodb-database')
 &nbsp;
-// Function to add a new recipe
-exports.add = async(recipeObject) =&gt; {
+// Function to add a new image
+exports.add = async(imageObject) =&gt; {
     
-    let addRecipe = database.addResourceToCollection(database_url, recipes_collection, recipeObject)
+    let addImage = database.addResourceToCollection(database_url, images_collection, imageObject)
                         .then((result) =&gt; result)
 &nbsp;
-    let addRecipeResponse = await addRecipe
+    let addImageResponse = await addImage
 &nbsp;
-    return addRecipeResponse
+    return addImageResponse
 }
 &nbsp;
-// Function to retrieve one recipe
-exports.getById = async(recipeId) =&gt; {
+// Function to retrieve one image
+exports.getById = async(imageId) =&gt; {
     
-    let getRecipe = database.getResourceFromCollection(database_url, recipes_collection, recipeId)
-                        .then((recipe) =&gt; recipe)
+    let getImage = database.getResourceFromCollection(database_url, images_collection, imageId)
+                        .then((image) =&gt; image)
     
-    let recipe = await getRecipe
+    let image = await getImage
 &nbsp;
-    return recipe
+    return image
 }
 &nbsp;
-// Function to retrieve all recipes
+// Function to retrieve all images
 exports.getAll = async() =&gt; {
     
-    let results = database.getAllFromCollection(database_url, recipes_collection)
+    let results = database.getAllFromCollection(database_url, images_collection)
                     .then((results) =&gt; results) // Obtains the result from the Promise object
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
 &nbsp;
-    // Return the list of recipes
+    // Return the list of images
     return final_result
 }
 &nbsp;
-// Function to update a recipe
-exports.update = async(recipeID, newRecipeDetailsObject) =&gt; {
+// Function to update a image
+exports.update = async(imageID, newImageDetailsObject) =&gt; {
 &nbsp;
-    let updateRecipe = database.updateResource(database_url, recipes_collection, recipeID, newRecipeDetailsObject)
-                            .then((recipe) =&gt; recipe)
+    let updateImage = database.updateResource(database_url, images_collection, imageID, newImageDetailsObject)
+                            .then((image) =&gt; image)
 &nbsp;
-    let updateRecipeResponse = await updateRecipe
+    let updateImageResponse = await updateImage
 &nbsp;
-    return updateRecipeResponse
+    return updateImageResponse
 }
 &nbsp;
-// Function to delete a recipe
-exports.delete = async(recipeID) =&gt; {
+// Function to delete a image
+exports.delete = async(imageID) =&gt; {
 &nbsp;
-    let deleteRecipe = database.deleteResource(database_url, recipes_collection, recipeID)
-                            .then((recipe) =&gt; recipe)
+    let deleteImage = database.deleteResource(database_url, images_collection, imageID)
+                            .then((image) =&gt; image)
 &nbsp;
-    let deleteRecipeResponse = await deleteRecipe
+    let deleteImageResponse = await deleteImage
 &nbsp;
-    return deleteRecipeResponse
+    return deleteImageResponse
 }
 &nbsp;</pre></td></tr>
 </table></pre>

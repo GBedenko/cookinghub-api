@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for recipes-controller.js</title>
+    <title>Code coverage report for logins-controller.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> recipes-controller.js
+      <a href="index.html">All files</a> logins-controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -166,65 +166,65 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection = "recipes"
+const logins_collection = "logins"
 &nbsp;
 const database = require('./mongodb-database')
 &nbsp;
-// Function to add a new recipe
-exports.add = async(recipeObject) =&gt; {
+// Function to add a new login
+exports.add = async(loginObject) =&gt; {
     
-    let addRecipe = database.addResourceToCollection(database_url, recipes_collection, recipeObject)
+    let addLogin = database.addResourceToCollection(database_url, logins_collection, loginObject)
                         .then((result) =&gt; result)
 &nbsp;
-    let addRecipeResponse = await addRecipe
+    let addLoginResponse = await addLogin
 &nbsp;
-    return addRecipeResponse
+    return addLoginResponse
 }
 &nbsp;
-// Function to retrieve one recipe
-exports.getById = async(recipeId) =&gt; {
+// Function to retrieve one login
+exports.getById = async(loginId) =&gt; {
     
-    let getRecipe = database.getResourceFromCollection(database_url, recipes_collection, recipeId)
-                        .then((recipe) =&gt; recipe)
+    let getLogin = database.getResourceFromCollection(database_url, logins_collection, loginId)
+                        .then((login) =&gt; login)
     
-    let recipe = await getRecipe
+    let login = await getLogin
 &nbsp;
-    return recipe
+    return login
 }
 &nbsp;
-// Function to retrieve all recipes
+// Function to retrieve all logins
 exports.getAll = async() =&gt; {
     
-    let results = database.getAllFromCollection(database_url, recipes_collection)
+    let results = database.getAllFromCollection(database_url, logins_collection)
                     .then((results) =&gt; results) // Obtains the result from the Promise object
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
 &nbsp;
-    // Return the list of recipes
+    // Return the list of logins
     return final_result
 }
 &nbsp;
-// Function to update a recipe
-exports.update = async(recipeID, newRecipeDetailsObject) =&gt; {
+// Function to update a login
+exports.update = async(loginID, newLoginDetailsObject) =&gt; {
 &nbsp;
-    let updateRecipe = database.updateResource(database_url, recipes_collection, recipeID, newRecipeDetailsObject)
-                            .then((recipe) =&gt; recipe)
+    let updateLogin = database.updateResource(database_url, logins_collection, loginID, newLoginDetailsObject)
+                            .then((login) =&gt; login)
 &nbsp;
-    let updateRecipeResponse = await updateRecipe
+    let updateLoginResponse = await updateLogin
 &nbsp;
-    return updateRecipeResponse
+    return updateLoginResponse
 }
 &nbsp;
-// Function to delete a recipe
-exports.delete = async(recipeID) =&gt; {
+// Function to delete a login
+exports.delete = async(loginID) =&gt; {
 &nbsp;
-    let deleteRecipe = database.deleteResource(database_url, recipes_collection, recipeID)
-                            .then((recipe) =&gt; recipe)
+    let deleteLogin = database.deleteResource(database_url, logins_collection, loginID)
+                            .then((login) =&gt; login)
 &nbsp;
-    let deleteRecipeResponse = await deleteRecipe
+    let deleteLoginResponse = await deleteLogin
 &nbsp;
-    return deleteRecipeResponse
+    return deleteLoginResponse
 }
 &nbsp;</pre></td></tr>
 </table></pre>

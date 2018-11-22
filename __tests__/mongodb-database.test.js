@@ -1,6 +1,6 @@
 'use strict'
 
-const mongoDB = require('../modules/database')
+const mongoDB = require('../modules/mongodb-database')
 
 describe('Adding a new resource to a mongodb collection', async() => {
 
