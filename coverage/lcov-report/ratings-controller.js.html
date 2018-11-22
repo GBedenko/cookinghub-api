@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for recipes-controller.js</title>
+    <title>Code coverage report for ratings-controller.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> recipes-controller.js
+      <a href="index.html">All files</a> ratings-controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
@@ -166,65 +166,65 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const database_url = "mongodb://localhost:27017/yummy_recipes"
-const recipes_collection = "recipes"
+const ratings_collection = "ratings"
 &nbsp;
 const database = require('./mongodb-database')
 &nbsp;
-// Function to add a new recipe
-exports.add = async(recipeObject) =&gt; {
+// Function to add a new rating
+exports.add = async(ratingObject) =&gt; {
     
-    let addRecipe = database.addResourceToCollection(database_url, recipes_collection, recipeObject)
+    let addRating = database.addResourceToCollection(database_url, ratings_collection, ratingObject)
                         .then((result) =&gt; result)
 &nbsp;
-    let addRecipeResponse = await addRecipe
+    let addRatingResponse = await addRating
 &nbsp;
-    return addRecipeResponse
+    return addRatingResponse
 }
 &nbsp;
-// Function to retrieve one recipe
-exports.getById = async(recipeId) =&gt; {
+// Function to retrieve one rating
+exports.getById = async(ratingId) =&gt; {
     
-    let getRecipe = database.getResourceFromCollection(database_url, recipes_collection, recipeId)
-                        .then((recipe) =&gt; recipe)
+    let getRating = database.getResourceFromCollection(database_url, ratings_collection, ratingId)
+                        .then((rating) =&gt; rating)
     
-    let recipe = await getRecipe
+    let rating = await getRating
 &nbsp;
-    return recipe
+    return rating
 }
 &nbsp;
-// Function to retrieve all recipes
+// Function to retrieve all ratings
 exports.getAll = async() =&gt; {
     
-    let results = database.getAllFromCollection(database_url, recipes_collection)
+    let results = database.getAllFromCollection(database_url, ratings_collection)
                     .then((results) =&gt; results) // Obtains the result from the Promise object
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
 &nbsp;
-    // Return the list of recipes
+    // Return the list of ratings
     return final_result
 }
 &nbsp;
-// Function to update a recipe
-exports.update = async(recipeID, newRecipeDetailsObject) =&gt; {
+// Function to update a rating
+exports.update = async(ratingID, newRatingDetailsObject) =&gt; {
 &nbsp;
-    let updateRecipe = database.updateResource(database_url, recipes_collection, recipeID, newRecipeDetailsObject)
-                            .then((recipe) =&gt; recipe)
+    let updateRating = database.updateResource(database_url, ratings_collection, ratingID, newRatingDetailsObject)
+                            .then((rating) =&gt; rating)
 &nbsp;
-    let updateRecipeResponse = await updateRecipe
+    let updateRatingResponse = await updateRating
 &nbsp;
-    return updateRecipeResponse
+    return updateRatingResponse
 }
 &nbsp;
-// Function to delete a recipe
-exports.delete = async(recipeID) =&gt; {
+// Function to delete a rating
+exports.delete = async(ratingID) =&gt; {
 &nbsp;
-    let deleteRecipe = database.deleteResource(database_url, recipes_collection, recipeID)
-                            .then((recipe) =&gt; recipe)
+    let deleteRating = database.deleteResource(database_url, ratings_collection, ratingID)
+                            .then((rating) =&gt; rating)
 &nbsp;
-    let deleteRecipeResponse = await deleteRecipe
+    let deleteRatingResponse = await deleteRating
 &nbsp;
-    return deleteRecipeResponse
+    return deleteRatingResponse
 }
 &nbsp;</pre></td></tr>
 </table></pre>

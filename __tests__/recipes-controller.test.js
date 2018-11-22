@@ -2,13 +2,13 @@
 
 const recipesController = require('../modules/recipes-controller')
 
-jest.mock('../modules/database')
+jest.mock('../modules/mongodb-database')
 
-test('Recieving a new recipe sends it to the database', async done => {
+test('Adding a new recipe sends it to the database', async done => {
 
         expect.assertions(1)
 
-        const response = await recipesController.add({"name":"Test Recipe Name"})
+        const response = await recipesController.add({"name":"Test Name"})
 
         expect(response).toBeTruthy()
 
@@ -21,7 +21,7 @@ test('Recieving a get request recieves an array response from the database', asy
         
         const response = await recipesController.getAll()
         
-        expect(response).toEqual([{"_id": 1234, "name":"Test Recipe Name"}])
+        expect(response).toEqual([{"_id": 1234, "name":"Test Name"}])
         
         done()
 })
@@ -32,7 +32,7 @@ test('Recieving a get request for one recipe recieves one recipe response from t
         
         const response = await recipesController.getById("1234")
 
-        expect(response).toEqual({"_id": 1234, "name":"Test Recipe Name"})
+        expect(response).toEqual({"_id": 1234, "name":"Test Name"})
         
         done()
 })
@@ -41,7 +41,7 @@ test('Recieving a put request for one recipe recieves a success response from th
 
         expect.assertions(1)
         
-        const response = await recipesController.update("1234", {"name":"Test Recipe Name"})
+        const response = await recipesController.update("1234", {"name":"Test Name"})
 
         expect(response).toBeTruthy()
         
