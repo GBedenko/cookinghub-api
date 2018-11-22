@@ -28,9 +28,9 @@ exports.getById = async(loginId) => {
 }
 
 // Function to retrieve all logins
-exports.getAll = async() => {
+exports.getAll = async(query) => {
     
-    let results = database.getAllFromCollection(database_url, logins_collection)
+    let results = database.getAllFromCollection(database_url, logins_collection, query)
                     .then((results) => results) // Obtains the result from the Promise object
                     .catch((err) => console.log(err)) // If the result was an error then handle the error
     

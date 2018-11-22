@@ -39,7 +39,7 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 
 // GET Request to retrieve one recipe
 app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
-
+	
 	// Call controller to retrieve one recipe
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
