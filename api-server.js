@@ -18,44 +18,47 @@ const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
 const authentication = require('./modules/authentication')
 
-app.use((req, res, next) => {
+
+app.use((err,req,res,next) => {
+	
+	// Accept requests from all clients
 	res.header("Access-Control-Allow-Origin", "*")
 	next()
 })
 
-// app.all('*',function(req,res,next){
-//     if(req.isAuthenticated()){
-//         next();
-//     }else{
-//         next(new Error(401)); // 401 Not Authorized
-//     }
-// })
+// For all routes/endpoints and all HTTP methods, authenticate that the user exists
+// If not returns a 401 status code (Unauthorized)
+app.all('*', async(req, res, next) => {
+	
+	// Using authentication module, check if the user exists for not
+	const userExists = await authentication.checkUserCredentials(req)
 
-// app.use((err,req,res,next) => {
-//     // Just basic, should be filled out to next()
-//     // or respond on all possible code paths
-//     if(err instanceof Error){
-//         if(err.message === '401'){
-//             res.render('error401');
-//         }
-//     }
-// })
+    if(userExists){
+        next();
+    } else {
+        next(new Error(401))
+    }
+})
+
+app.use((err,req,res,next) => {
+	
+	// Error handling for any errors thrown within routes
+    if(err instanceof Error){
+        if(err.message === '401'){
+            res.status(401).send()
+        }
+    }
+})
 
 // GET Request to retrieve all recipes
 app.get('/api/v1.0/recipes', async(req, res) => {
 
-	// Using authentication module, check if the user exists for not
-	const userExists = await authentication.checkUserCredentials(req)
+	// Call controller to retrieve all recipes
+	// Waits for response from controller before continuing (async/await)
+	const recipes = await recipesController.getAll()
 
-	if(userExists) {
-		// Call controller to retrieve all recipes
-		// Waits for response from controller before continuing (async/await)
-		const recipes = await recipesController.getAll()
-	
-		res.status(200).send(JSON.stringify(recipes, null, 2))
-	} else {
-		res.status(401).send()
-	}
+	res.status(200).send(JSON.stringify(recipes, null, 2))
+
 })
 
 // GET Request to retrieve one recipe
