@@ -28,9 +28,9 @@ exports.getById = async(userId) => {
 }
 
 // Function to retrieve all users
-exports.getAll = async() => {
+exports.getAll = async(queryObject) => {
 
-    let results = database.getAllFromCollection(database_url, users_collection)
+    let results = database.getAllFromCollection(database_url, users_collection, queryObject)
                     .then((results) => results) // Obtains the result from the Promise object
                     .catch((err) => console.log(err)) // If the result was an error then handle the error
     

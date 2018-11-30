@@ -16,16 +16,30 @@ const notificationsController = require('./modules/notifications-controller')
 const ratingsController = require('./modules/ratings-controller')
 const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
+const authentication = require('./modules/authentication')
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*")
 	next()
 })
 
-// Home root currently redirects to /recipes
-app.get('/api/v1.0/', (req, res) => {
-	res.redirect('/api/v1.0/recipes')
-})
+// app.all('*',function(req,res,next){
+//     if(req.isAuthenticated()){
+//         next();
+//     }else{
+//         next(new Error(401)); // 401 Not Authorized
+//     }
+// })
+
+// app.use((err,req,res,next) => {
+//     // Just basic, should be filled out to next()
+//     // or respond on all possible code paths
+//     if(err instanceof Error){
+//         if(err.message === '401'){
+//             res.render('error401');
+//         }
+//     }
+// })
 
 // GET Request to retrieve all recipes
 app.get('/api/v1.0/recipes', async(req, res) => {
@@ -39,7 +53,7 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 
 // GET Request to retrieve one recipe
 app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
-
+	
 	// Call controller to retrieve one recipe
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
@@ -142,6 +156,24 @@ app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 		res.status(200).send("User with id: " + req.params.user_id + " has been deleted\n")
 	} else {
 		res.status(400).send("There was an error deleting your user\n")
+	}
+})
+
+// HEAD Request to authenticate/check if a user exists
+app.head('/api/v1.0/users/:user', async (req, res) => {
+
+	// Retrieve the authorization credentials used by the client's request
+	const authorizationHeader = req.get('Authorization')
+
+	// Using authentication module, check if the user exists for not
+	const userExists = await authentication.checkUserCredentials(authorizationHeader)
+	
+	if(userExists) {
+		// If user exists, return status 200
+		res.status(200).send()
+	} else {
+		// If user doesn't exist, return status 401
+		res.status(401).send()
 	}
 })
 

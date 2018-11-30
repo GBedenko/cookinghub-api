@@ -4,7 +4,7 @@
   "description": "Backend API for 304CEM Coursework Assignment",
   "main": "api-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api-server.js"
   },
   "repository": {
     "type": "git",
@@ -13,6 +13,7 @@
   "author": "bedenkog",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "express": "^4.16.4",
     "mongodb": "^3.1.8"
   }
