@@ -5,8 +5,11 @@ const bcrypt = require('bcrypt')
 // Import module for communicating with users backend
 const usersController = require('./users-controller')
 
-exports.checkUserCredentials = async(authorizationHeader) => {
-    
+exports.checkUserCredentials = async(request) => {
+		
+	// Retrieve the authorization credentials used by the client's request
+	const authorizationHeader = request.get('Authorization')
+
     // Split word 'Basic' from the Authorization header
     const [, hash] = authorizationHeader.split(' ')
     

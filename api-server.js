@@ -44,11 +44,18 @@ app.use((req, res, next) => {
 // GET Request to retrieve all recipes
 app.get('/api/v1.0/recipes', async(req, res) => {
 
-	// Call controller to retrieve all recipes
-	// Waits for response from controller before continuing (async/await)
-	const recipes = await recipesController.getAll()
+	// Using authentication module, check if the user exists for not
+	const userExists = await authentication.checkUserCredentials(req)
 
-	res.status(200).send(JSON.stringify(recipes, null, 2))
+	if(userExists) {
+		// Call controller to retrieve all recipes
+		// Waits for response from controller before continuing (async/await)
+		const recipes = await recipesController.getAll()
+	
+		res.status(200).send(JSON.stringify(recipes, null, 2))
+	} else {
+		res.status(401).send()
+	}
 })
 
 // GET Request to retrieve one recipe
