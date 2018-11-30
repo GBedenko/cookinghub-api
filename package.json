@@ -13,6 +13,7 @@
   "author": "bedenkog",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.2",
     "express": "^4.16.4",
     "mongodb": "^3.1.8"
   }
