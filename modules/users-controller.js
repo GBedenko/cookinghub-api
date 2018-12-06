@@ -1,61 +1,68 @@
-const database_url = "mongodb://localhost:27017/yummy_recipes"
-const users_collection = "users"
+'use strict'
+
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
+const usersCollection = 'users'
 
 const database = require('./mongodb-database')
 
 // Function to add a new user
 exports.add = async(userObject) => {
 
-    let addUser = database.addResourceToCollection(database_url, users_collection, userObject)
-                        .then((result) => result)
+	const addUser = database.addResourceToCollection(databaseURL, usersCollection, userObject)
+		.then((result) => result)
+		.catch((err) => console.log(err))
 
-    let addUserResponse = await addUser
+	const addUserResponse = await addUser
 
-    return addUserResponse
+	return addUserResponse
 }
 
 // Function to retrieve one user
 exports.getById = async(userId) => {
 
-    let getUser = database.getResourceFromCollection(database_url, users_collection, userId)
-                        .then((user) => user)
-    
-    let user = await getUser
+	const getUser = database.getResourceFromCollection(databaseURL, usersCollection, userId)
+		.then((user) => user)
+		.catch((err) => console.log(err))
 
-    return user
+	const user = await getUser
+
+	return user
 }
 
 // Function to retrieve all users
 exports.getAll = async(queryObject) => {
 
-    let results = database.getAllFromCollection(database_url, users_collection, queryObject)
-                    .then((results) => results) // Obtains the result from the Promise object
-    
-    // Calls the results function, waits for response before continuing
-    let final_result = await results
+	const results = database.getAllFromCollection(databaseURL, usersCollection, queryObject)
+		.then((results) => results) // Obtains the result from the Promise object
+		.catch((err) => console.log(err)) // If the result was an error then handle the error
 
-    // Return the list of users
-    return final_result
+	// Calls the results function, waits for response before continuing
+	const finalResult = await results
+
+	// Return the list of users
+	return finalResult
 }
 
 // Function to update a user
 exports.update = async(userID, newUserDetailsObject) => {
-    
-    let updateUser = database.updateResource(database_url, users_collection, userID, newUserDetailsObject)
-                            .then((user) => user)
 
-    let updateUserResponse = await updateUser
+	const updateUser = database.updateResource(databaseURL, usersCollection, userID, newUserDetailsObject)
+		.then((user) => user)
+		.catch((err) => console.log(err))
 
-    return updateUserResponse
+	const updateUserResponse = await updateUser
+
+	return updateUserResponse
 }
 
 // Function to delete a user
 exports.delete = async(userID) => {
 
-    let deleteUser = database.deleteResource(database_url, users_collection, userID)
-                            .then((user) => user)
+	const deleteUser = database.deleteResource(databaseURL, usersCollection, userID)
+		.then((user) => user)
+		.catch((err) => console.log(err))
 
-    let deleteUserResponse = await deleteUser
+	const deleteUserResponse = await deleteUser
 
-    return deleteUserResponse
+	return deleteUserResponse
 }
