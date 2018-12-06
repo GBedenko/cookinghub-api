@@ -1,14 +1,13 @@
 const database_url = "mongodb://localhost:27017/yummy_recipes"
 const logins_collection = "logins"
 
-const database = require('./mongodb')
+const database = require('./mongodb-database')
 
 // Function to add a new login
 exports.add = async(loginObject) => {
     
     let addLogin = database.addResourceToCollection(database_url, logins_collection, loginObject)
                         .then((result) => result)
-                        .catch((err) => console.log(err))
 
     let addLoginResponse = await addLogin
 
@@ -20,7 +19,6 @@ exports.getById = async(loginId) => {
     
     let getLogin = database.getResourceFromCollection(database_url, logins_collection, loginId)
                         .then((login) => login)
-                        .catch((err) => console.log(err))
     
     let login = await getLogin
 
@@ -32,7 +30,6 @@ exports.getAll = async(query) => {
     
     let results = database.getAllFromCollection(database_url, logins_collection, query)
                     .then((results) => results) // Obtains the result from the Promise object
-                    .catch((err) => console.log(err)) // If the result was an error then handle the error
     
     // Calls the results function, waits for response before continuing
     let final_result = await results
@@ -46,7 +43,6 @@ exports.update = async(loginID, newLoginDetailsObject) => {
 
     let updateLogin = database.updateResource(database_url, logins_collection, loginID, newLoginDetailsObject)
                             .then((login) => login)
-                            .catch((err) => console.log(err))
 
     let updateLoginResponse = await updateLogin
 
@@ -58,7 +54,6 @@ exports.delete = async(loginID) => {
 
     let deleteLogin = database.deleteResource(database_url, logins_collection, loginID)
                             .then((login) => login)
-                            .catch((err) => console.log(err))
 
     let deleteLoginResponse = await deleteLogin
 
