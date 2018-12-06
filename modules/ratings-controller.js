@@ -1,66 +1,68 @@
-const database_url = "mongodb://localhost:27017/yummy_recipes"
-const ratings_collection = "ratings"
+'use strict'
+
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
+const ratingsCollection = 'ratings'
 
 const database = require('./mongodb')
 
 // Function to add a new rating
 exports.add = async(ratingObject) => {
-    
-    let addRating = database.addResourceToCollection(database_url, ratings_collection, ratingObject)
-                        .then((result) => result)
-                        .catch((err) => console.log(err))
 
-    let addRatingResponse = await addRating
+	const addRating = database.addResourceToCollection(databaseURL, ratingsCollection, ratingObject)
+		.then((result) => result)
+		.catch((err) => console.log(err))
 
-    return addRatingResponse
+	const addRatingResponse = await addRating
+
+	return addRatingResponse
 }
 
 // Function to retrieve one rating
 exports.getById = async(ratingId) => {
-    
-    let getRating = database.getResourceFromCollection(database_url, ratings_collection, ratingId)
-                        .then((rating) => rating)
-                        .catch((err) => console.log(err))
-    
-    let rating = await getRating
 
-    return rating
+	const getRating = database.getResourceFromCollection(databaseURL, ratingsCollection, ratingId)
+		.then((rating) => rating)
+		.catch((err) => console.log(err))
+
+	const rating = await getRating
+
+	return rating
 }
 
 // Function to retrieve all ratings
 exports.getAll = async() => {
-    
-    let results = database.getAllFromCollection(database_url, ratings_collection)
-                    .then((results) => results) // Obtains the result from the Promise object
-                    .catch((err) => console.log(err)) // If the result was an error then handle the error
-    
-    // Calls the results function, waits for response before continuing
-    let final_result = await results
 
-    // Return the list of ratings
-    return final_result
+	const results = database.getAllFromCollection(databaseURL, ratingsCollection)
+		.then((results) => results) // Obtains the result from the Promise object
+		.catch((err) => console.log(err)) // If the result was an error then handle the error
+
+	// Calls the results function, waits for response before continuing
+	const finalResult = await results
+
+	// Return the list of ratings
+	return finalResult
 }
 
 // Function to update a rating
 exports.update = async(ratingID, newRatingDetailsObject) => {
 
-    let updateRating = database.updateResource(database_url, ratings_collection, ratingID, newRatingDetailsObject)
-                            .then((rating) => rating)
-                            .catch((err) => console.log(err))
+	const updateRating = database.updateResource(databaseURL, ratingsCollection, ratingID, newRatingDetailsObject)
+		.then((rating) => rating)
+		.catch((err) => console.log(err))
 
-    let updateRatingResponse = await updateRating
+	const updateRatingResponse = await updateRating
 
-    return updateRatingResponse
+	return updateRatingResponse
 }
 
 // Function to delete a rating
 exports.delete = async(ratingID) => {
 
-    let deleteRating = database.deleteResource(database_url, ratings_collection, ratingID)
-                            .then((rating) => rating)
-                            .catch((err) => console.log(err))
+	const deleteRating = database.deleteResource(databaseURL, ratingsCollection, ratingID)
+		.then((rating) => rating)
+		.catch((err) => console.log(err))
 
-    let deleteRatingResponse = await deleteRating
+	const deleteRatingResponse = await deleteRating
 
-    return deleteRatingResponse
+	return deleteRatingResponse
 }

@@ -1,66 +1,68 @@
-const database_url = "mongodb://localhost:27017/yummy_recipes"
-const logins_collection = "logins"
+'use strict'
+
+const databaseUrl = 'mongodb://localhost:27017/yummy_recipes'
+const loginsCollection = 'logins'
 
 const database = require('./mongodb')
 
 // Function to add a new login
 exports.add = async(loginObject) => {
-    
-    let addLogin = database.addResourceToCollection(database_url, logins_collection, loginObject)
-                        .then((result) => result)
-                        .catch((err) => console.log(err))
 
-    let addLoginResponse = await addLogin
+	const addLogin = database.addResourceToCollection(databaseUrl, loginsCollection, loginObject)
+		.then((result) => result)
+		.catch((err) => console.log(err))
 
-    return addLoginResponse
+	const addLoginResponse = await addLogin
+
+	return addLoginResponse
 }
 
 // Function to retrieve one login
 exports.getById = async(loginId) => {
-    
-    let getLogin = database.getResourceFromCollection(database_url, logins_collection, loginId)
-                        .then((login) => login)
-                        .catch((err) => console.log(err))
-    
-    let login = await getLogin
 
-    return login
+	const getLogin = database.getResourceFromCollection(databaseUrl, loginsCollection, loginId)
+		.then((login) => login)
+		.catch((err) => console.log(err))
+
+	const login = await getLogin
+
+	return login
 }
 
 // Function to retrieve all logins
 exports.getAll = async(query) => {
-    
-    let results = database.getAllFromCollection(database_url, logins_collection, query)
-                    .then((results) => results) // Obtains the result from the Promise object
-                    .catch((err) => console.log(err)) // If the result was an error then handle the error
-    
-    // Calls the results function, waits for response before continuing
-    let final_result = await results
 
-    // Return the list of logins
-    return final_result
+	const results = database.getAllFromCollection(databaseUrl, loginsCollection, query)
+		.then((results) => results) // Obtains the result from the Promise object
+		.catch((err) => console.log(err)) // If the result was an error then handle the error
+
+	// Calls the results function, waits for response before continuing
+	const finalResult = await results
+
+	// Return the list of logins
+	return finalResult
 }
 
 // Function to update a login
 exports.update = async(loginID, newLoginDetailsObject) => {
 
-    let updateLogin = database.updateResource(database_url, logins_collection, loginID, newLoginDetailsObject)
-                            .then((login) => login)
-                            .catch((err) => console.log(err))
+	const updateLogin = database.updateResource(databaseUrl, loginsCollection, loginID, newLoginDetailsObject)
+		.then((login) => login)
+		.catch((err) => console.log(err))
 
-    let updateLoginResponse = await updateLogin
+	const updateLoginResponse = await updateLogin
 
-    return updateLoginResponse
+	return updateLoginResponse
 }
 
 // Function to delete a login
 exports.delete = async(loginID) => {
 
-    let deleteLogin = database.deleteResource(database_url, logins_collection, loginID)
-                            .then((login) => login)
-                            .catch((err) => console.log(err))
+	const deleteLogin = database.deleteResource(databaseUrl, loginsCollection, loginID)
+		.then((login) => login)
+		.catch((err) => console.log(err))
 
-    let deleteLoginResponse = await deleteLogin
+	const deleteLoginResponse = await deleteLogin
 
-    return deleteLoginResponse
+	return deleteLoginResponse
 }
