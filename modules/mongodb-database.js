@@ -67,7 +67,7 @@ exports.addResourceToCollection = (databaseURL, collectionName, newResource) => 
  * @returns {Promise} Promise object representing the result of retrieving resources from the provided database/collection
  */
 exports.getAllFromCollection = (databaseURL, collectionName, searchObject, paginationObject, sortObject) => new Promise((resolve, reject) => {
-	
+
 	// Connect to the mongodb database
 	// Once done, runs the callback to execute the query to find all resources in the given collection
 	MongoClient.connect(databaseURL, (err, db) => {

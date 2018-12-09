@@ -66,7 +66,7 @@ app.use((req, res, next) => {
 app.get('/api/v1.0/recipes', async(req, res) => {
 	
 	// Call controller to retrieve all recipes for the client's query
-	const recipes = await recipesController.getAll(req.body, req.query)
+	const recipes = await recipesController.getAll(req.query)
 
 	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(recipes)

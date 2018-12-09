@@ -49,13 +49,17 @@ exports.getById = async(recipeId) => {
  * @param {Object} [paginationObject] - Optional query object for which recipes you want to request
  * @returns {Array} Array of recipe objects retrieved from the request
  */
-exports.getAll = async(searchObject, queryObject) => {
-	
+exports.getAll = async(queryObject) => {
+
+	// Set default search query
+	let searchObject = {}
+
+	// If a query parameter was requested, set the searchObject to look
+	// for the parameter within the name of a recipe
+	if(queryObject.query) searchObject = {name: new RegExp(queryObject.query, 'i')}
+
 	// Set default pagination values if they aren't provided
 	let paginationObject = {limit: 0, skip: 0}
-
-	// Set default sort query 
-	let sortObject = {}
 
 	// If limit value is provided in query parameters, assign it to paginationObject
 	if(queryObject.limit) paginationObject.limit = parseInt(queryObject.limit)
@@ -63,15 +67,18 @@ exports.getAll = async(searchObject, queryObject) => {
 	// If skip value is provided in query parameters, assign it to paginationObject
 	if(queryObject.skip) paginationObject.skip = parseInt(queryObject.skip)
 
+	// Set default sort query 
+	let sortObject = {}	
+
 	// Assign all remaining key parameters to the sort object
-	// Sort values are all other parameters passed, apart from the limit and skip values
+	// Sort values are all other parameters passed, apart from the limit, skip or query values
 	sortObject = queryObject
 	delete sortObject.limit
 	delete sortObject.skip
+	delete sortObject.query
 	
 	// For every sort parameter, ensure that its value is an integer so that mongodb can use it
 	for (let key in sortObject) {
-		console.log(key)
 		sortObject[key] = parseInt(sortObject[key])
 	}
 	
