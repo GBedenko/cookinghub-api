@@ -1,5 +1,18 @@
 'use strict'
 
+/** API Server Index Routes
+ * @module api-server
+ * @requires express
+ * @requires http-status-codes
+ * @requires modules/images-controller
+ * @requires modules/logins-controller
+ * @requires modules/notifications-controller
+ * @requires modules/ratings-controller
+ * @requires modules/recipes-controller
+ * @requires modules/users-controller
+ * @requires modules/authentication
+ */
+
 console.log('Server Booting Up...')
 
 // Using express as my web server, create instance and set attributes
@@ -13,6 +26,7 @@ const httpStatus = require('http-status-codes')
 // Port this server will run on
 const port = 8080
 
+// Import controllers used for processing requests logic
 const imagesController = require('./modules/images-controller')
 const loginsController = require('./modules/logins-controller')
 const notificationsController = require('./modules/notifications-controller')
@@ -44,62 +58,88 @@ app.use((req, res, next) => {
 //     }
 // })
 
-// GET Request to retrieve all recipes
+/**
+ * GET Request to retrieve all recipes
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/recipes', async(req, res) => {
 
-	// Call controller to retrieve all recipes
-	// Waits for response from controller before continuing (async/await)
-	const recipes = await recipesController.getAll()
+	// Call controller to retrieve all recipes for the client's query
+	const recipes = await recipesController.getAll(req.body)
 
+	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(recipes)
 })
 
-// GET Request to retrieve one recipe
+/**
+ * GET Request to retrieve one recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 
-	// Call controller to retrieve one recipe
+	// Call controller to retrieve one recipe using the provided id
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(recipe)
 })
 
-// POST Request to create a new recipe
+/**
+ * POST Request to create a new recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/recipes', async(req, res) => {
 
-	// Call controller to create a new recipe from the provided request
-	const response = await recipesController.add(req.body)
+	// Call controller to create a new recipe using the provided request body
+	const addRecipeResponse = await recipesController.add(req.body)
 
-	if(response) {
-		res.status(httpStatus.OK).send('Recipe added succesfully\n')
+	if(addRecipeResponse) {
+		// If adding recipe was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', recipeAddedSuccessfully: addRecipeResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting your recipe\n')
+		// If adding recipe was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeAddedSuccessfully: addRecipeResponse})
 	}
 })
 
-// PUT Request to update a recipe
+/**
+ * PUT Request to update a recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 
-	// Call controller to create a new recipe from the provided request
-	const recipeUpdateResponse = await recipesController.update(req.params.recipe_id, req.body)
+	// Call controller to update the recipe for the provided id and updated object from the provided request
+	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
 
-	if(recipeUpdateResponse) {
-		res.status(httpStatus.OK).send('recipe with id: ' + req.params.recipe_id + ' has been updated\n')
+	if(updateRecipeResponse) {
+		// If updating recipe was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your recipe\n')
+		// If updating recipe was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
 	}
 })
 
-// DELETE Request to delete one recipe
+/**
+ * DELETE Request to delete one recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 
-	// Call controller to delete a recipe corresponding to the HTML request's recipe id
-	// Once completed, return back to client a message and status code confirming the recipe was deleted
-	const recipeDeleteResponse = await recipesController.delete(req.params.recipe_id)
+	// Call controller to delete a recipe using the provided recipe id from client's request
+	const deleteRecipeResponse = await recipesController.delete(req.params.recipe_id)
 
-	if(recipeDeleteResponse) {
-		res.status(httpStatus.OK).send('Recipe with id: ' + req.params.recipe_id + ' has been deleted\n')
+	if(deleteRecipeResponse) {
+		// If deleting recipe was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your recipe\n')
+		// If deleting recipe was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
 	}
 })
 
