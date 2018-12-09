@@ -62,11 +62,12 @@ exports.addResourceToCollection = (databaseURL, collectionName, newResource) => 
  * Retrieve all resources from MongoDB for the provided database, collection and query
  * @param {string} databaseURL - Address of MongoDB database you want to use
  * @param {string} collectionName - Collection you want to retrieve resources from
- * @param {Object} [queryObject] - Optional query to specify criteria for which resources to retrieve. Retrieves all if no query object provided
+ * @param {Object} [searchObject] - Optional query to specify criteria for which resources to retrieve. Retrieves all if no query object provided
+ * @param {Object} [paginationObject] - Optional arguments to sort, limit or offset the returned results
  * @returns {Promise} Promise object representing the result of retrieving resources from the provided database/collection
  */
-exports.getAllFromCollection = (databaseURL, collectionName, queryObject) => new Promise((resolve, reject) => {
-
+exports.getAllFromCollection = (databaseURL, collectionName, searchObject, paginationObject, sortObject) => new Promise((resolve, reject) => {
+	
 	// Connect to the mongodb database
 	// Once done, runs the callback to execute the query to find all resources in the given collection
 	MongoClient.connect(databaseURL, (err, db) => {
@@ -80,7 +81,8 @@ exports.getAllFromCollection = (databaseURL, collectionName, queryObject) => new
 
 			// Mongodb query to find all resources from the collection and save it to an array called result
 			// Once completed, pass the result array as the resolve parameter of the promise
-			dbo.collection(collectionName).find(queryObject).toArray((err, result) => {
+			// Uses the searchObject and query parameters if they are provided
+			dbo.collection(collectionName).find(searchObject).skip(paginationObject.skip).limit(paginationObject.limit).sort(sortObject).toArray((err, result) => {
 
 				// If error performing the find query, reject the promise with an error object
 				if(err)	reject(new Error('Unable to perform find query in MongoDB'))
@@ -223,7 +225,6 @@ exports.deleteResource = (databaseURL, collectionName, resourceID) => new Promis
 				// Close database connection
 				db.close()
 
-				console.log(result)
 				// Resolve the promise with true to confirm the update query has successfully completed
 				if(result) resolve(true)
 			})

@@ -46,13 +46,43 @@ exports.getById = async(recipeId) => {
 
 /**
  * Requests and validates a request to retrieve all recipes or all recipes matching an optional query
- * @param {Object} [queryObject] - Optional query object for which recipes you want to request
+ * @param {Object} [paginationObject] - Optional query object for which recipes you want to request
  * @returns {Array} Array of recipe objects retrieved from the request
  */
-exports.getAll = async(queryObject) => {
+exports.getAll = async(searchObject, queryObject) => {
+	
+	let paginationObject = {}
+	let sortObject = {}
 
+	// Set default pagination values if they aren't provided
+	// Assign either default or provided limit value
+	if(queryObject.limit == undefined) {
+		paginationObject.limit = 10
+	} else {
+		paginationObject.limit = parseInt(queryObject.limit)
+	}
+	// Assign either default or provided skip value
+	if(queryObject.skip == undefined) {
+		paginationObject.skip = 0
+	} else {
+		paginationObject.skip = parseInt(queryObject.skip)
+	}
+
+	// Assign all remaining key parameters to the sort object
+	// Sort values are all other parameters passed, apart from the limit and skip values
+	sortObject = queryObject
+	delete sortObject.limit
+	delete sortObject.skip
+	
+	for (let key in sortObject) {
+		console.log(key)
+		sortObject[key] = parseInt(sortObject[key])
+	}
+
+	console.log(paginationObject)
+	console.log(sortObject)
 	// Call database to find resources with the provided query object or no query object
-	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, queryObject)
+	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, searchObject, paginationObject, sortObject)
 											.then((recipes) => recipes) // Retrieve the promise's value if resolved
 											.catch((reason) => reason) // Handle the promise's value if rejected
 

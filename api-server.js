@@ -64,9 +64,9 @@ app.use((req, res, next) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.get('/api/v1.0/recipes', async(req, res) => {
-
+	
 	// Call controller to retrieve all recipes for the client's query
-	const recipes = await recipesController.getAll(req.body)
+	const recipes = await recipesController.getAll(req.body, req.query)
 
 	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(recipes)
@@ -458,3 +458,6 @@ app.delete('/api/v1.0/logins/:login_id', async(req, res) => {
 
 // Runs the server on provided port
 app.listen(port, () => console.log(`Server listening on port ${port}`))
+
+// Export the endpoints module
+module.exports = app
