@@ -1,5 +1,9 @@
 {
     "source": {
         "include": ["api-server.js", "modules"]
+    },
+    "opts": {
+        "destination": "./docs/",
+        "readme": "README.md"
     }
 }
