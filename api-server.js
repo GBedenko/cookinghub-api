@@ -18,7 +18,9 @@ console.log('Server Booting Up...')
 // Using express as my web server, create instance and set attributes
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 app.use(express.json())
+app.use(bodyParser.json())
 
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
@@ -37,6 +39,7 @@ const authentication = require('./modules/authentication')
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', '*')
 	next()
 })
 
@@ -92,7 +95,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/recipes', async(req, res) => {
-
+	
 	// Call controller to create a new recipe using the provided request body
 	const addRecipeResponse = await recipesController.add(req.body)
 
