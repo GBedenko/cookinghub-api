@@ -51,22 +51,17 @@ exports.getById = async(recipeId) => {
  */
 exports.getAll = async(searchObject, queryObject) => {
 	
-	let paginationObject = {}
+	// Set default pagination values if they aren't provided
+	let paginationObject = {limit: 0, skip: 0}
+
+	// Set default sort query 
 	let sortObject = {}
 
-	// Set default pagination values if they aren't provided
-	// Assign either default or provided limit value
-	if(queryObject.limit == undefined) {
-		paginationObject.limit = 10
-	} else {
-		paginationObject.limit = parseInt(queryObject.limit)
-	}
-	// Assign either default or provided skip value
-	if(queryObject.skip == undefined) {
-		paginationObject.skip = 0
-	} else {
-		paginationObject.skip = parseInt(queryObject.skip)
-	}
+	// If limit value is provided in query parameters, assign it to paginationObject
+	if(queryObject.limit) paginationObject.limit = parseInt(queryObject.limit)
+	
+	// If skip value is provided in query parameters, assign it to paginationObject
+	if(queryObject.skip) paginationObject.skip = parseInt(queryObject.skip)
 
 	// Assign all remaining key parameters to the sort object
 	// Sort values are all other parameters passed, apart from the limit and skip values
@@ -74,13 +69,12 @@ exports.getAll = async(searchObject, queryObject) => {
 	delete sortObject.limit
 	delete sortObject.skip
 	
+	// For every sort parameter, ensure that its value is an integer so that mongodb can use it
 	for (let key in sortObject) {
 		console.log(key)
 		sortObject[key] = parseInt(sortObject[key])
 	}
-
-	console.log(paginationObject)
-	console.log(sortObject)
+	
 	// Call database to find resources with the provided query object or no query object
 	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, searchObject, paginationObject, sortObject)
 											.then((recipes) => recipes) // Retrieve the promise's value if resolved
