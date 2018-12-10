@@ -146,62 +146,88 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all users
+/**
+ * GET Request to retrieve all users
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/users', async(req, res) => {
+	
+	// Call controller to retrieve all users for the client's query
+	const users = await usersController.getAll(req.query)
 
-	// Call controller to retrieve all users
-	// Waits for response from controller before continuing (async/await)
-	const users = await usersController.getAll()
-
+	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(users)
 })
 
-// GET Request to retrieve one user
-app.get('/api/v1.0/user/:user_id', async(req, res) => {
+/**
+ * GET Request to retrieve one user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.get('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to retrieve one user
+	// Call controller to retrieve one user using the provided id
 	const user = await usersController.getById(req.params.user_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(user)
 })
 
-// POST Request to create a new user
+/**
+ * POST Request to create a new user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/users', async(req, res) => {
+	
+	// Call controller to create a new user using the provided request body
+	const addUserResponse = await usersController.add(req.body)
 
-	// Call controller to create a new user from the provided request
-	const response = await usersController.add(req.body)
-
-	if(response) {
-		res.status(httpStatus.OK).send('User added succesfully\n')
+	if(addUserResponse) {
+		// If adding user was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', userAddedSuccessfully: addUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting the user\n')
+		// If adding user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userAddedSuccessfully: addUserResponse})
 	}
 })
 
-// PUT Request to update a user
+/**
+ * PUT Request to update a user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to create a new user from the provided request
-	const userUpdateResponse = await usersController.update(req.params.user_id, req.body)
+	// Call controller to update the user for the provided id and updated object from the provided request
+	const updateUserResponse = await usersController.update(req.params.user_id, req.body)
 
-	if(userUpdateResponse) {
-		res.status(httpStatus.OK).send('User with id: ' + req.params.user_id + ' has been updated\n')
+	if(updateUserResponse) {
+		// If updating user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating the user\n')
+		// If updating user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
 	}
 })
 
-// DELETE Request to delete one user
+/**
+ * DELETE Request to delete one user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to delete a user corresponding to the HTML request's user id
-	// Once completed, return back to client a message and status code confirming the user was deleted
-	const userDeleteResponse = await usersController.delete(req.params.user_id)
+	// Call controller to delete a user using the provided user id from client's request
+	const deleteUserResponse = await usersController.delete(req.params.user_id)
 
-	if(userDeleteResponse) {
-		res.status(httpStatus.OK).send('User with id: ' + req.params.user_id + ' has been deleted\n')
+	if(deleteUserResponse) {
+		// If deleting user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userDeletedSuccessfully: deleteUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your user\n')
+		// If deleting user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', userDeletedSuccessfully: deleteUserResponse})
 	}
 })
 
