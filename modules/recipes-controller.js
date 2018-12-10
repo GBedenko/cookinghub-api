@@ -46,13 +46,44 @@ exports.getById = async(recipeId) => {
 
 /**
  * Requests and validates a request to retrieve all recipes or all recipes matching an optional query
- * @param {Object} [queryObject] - Optional query object for which recipes you want to request
+ * @param {Object} [paginationObject] - Optional query object for which recipes you want to request
  * @returns {Array} Array of recipe objects retrieved from the request
  */
 exports.getAll = async(queryObject) => {
 
+	// Set default search query
+	let searchObject = {}
+
+	// If a query parameter was requested, set the searchObject to look
+	// for the parameter within the name of a recipe
+	if(queryObject.query) searchObject = {name: new RegExp(queryObject.query, 'i')}
+
+	// Set default pagination values if they aren't provided
+	let paginationObject = {limit: 0, skip: 0}
+
+	// If limit value is provided in query parameters, assign it to paginationObject
+	if(queryObject.limit) paginationObject.limit = parseInt(queryObject.limit)
+	
+	// If skip value is provided in query parameters, assign it to paginationObject
+	if(queryObject.skip) paginationObject.skip = parseInt(queryObject.skip)
+
+	// Set default sort query 
+	let sortObject = {}	
+
+	// Assign all remaining key parameters to the sort object
+	// Sort values are all other parameters passed, apart from the limit, skip or query values
+	sortObject = queryObject
+	delete sortObject.limit
+	delete sortObject.skip
+	delete sortObject.query
+	
+	// For every sort parameter, ensure that its value is an integer so that mongodb can use it
+	for (let key in sortObject) {
+		sortObject[key] = parseInt(sortObject[key])
+	}
+	
 	// Call database to find resources with the provided query object or no query object
-	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, queryObject)
+	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, searchObject, paginationObject, sortObject)
 											.then((recipes) => recipes) // Retrieve the promise's value if resolved
 											.catch((reason) => reason) // Handle the promise's value if rejected
 

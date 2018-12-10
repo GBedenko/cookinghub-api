@@ -18,7 +18,9 @@ console.log('Server Booting Up...')
 // Using express as my web server, create instance and set attributes
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 app.use(express.json())
+app.use(bodyParser.json())
 
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
@@ -37,6 +39,7 @@ const authentication = require('./modules/authentication')
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', '*')
 	next()
 })
 
@@ -64,9 +67,9 @@ app.use((req, res, next) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.get('/api/v1.0/recipes', async(req, res) => {
-
+	
 	// Call controller to retrieve all recipes for the client's query
-	const recipes = await recipesController.getAll(req.body)
+	const recipes = await recipesController.getAll(req.query)
 
 	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(recipes)
@@ -92,7 +95,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/recipes', async(req, res) => {
-
+	
 	// Call controller to create a new recipe using the provided request body
 	const addRecipeResponse = await recipesController.add(req.body)
 
@@ -458,3 +461,6 @@ app.delete('/api/v1.0/logins/:login_id', async(req, res) => {
 
 // Runs the server on provided port
 app.listen(port, () => console.log(`Server listening on port ${port}`))
+
+// Export the endpoints module
+module.exports = app
