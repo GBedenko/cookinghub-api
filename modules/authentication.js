@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 const usersController = require('./users-controller')
 
 exports.checkUserCredentials = async(authorizationHeader) => {
-
+	
 	// Split word 'Basic' from the Authorization header
 	const [, hash] = authorizationHeader.split(' ')
 
@@ -22,7 +22,7 @@ exports.checkUserCredentials = async(authorizationHeader) => {
 	// If a user was found with this username, check the password
 	if(existingUser.length > 0) {
 		// Compare the password the user entered with the one stored in db for the user
-		const passwordCorrect = await bcrypt.compare(password, existingUser[0].password)
+		const passwordCorrect = await bcrypt.compare(password, existingUser[0].passwordHash)
 
 		if(passwordCorrect) {
 			return true

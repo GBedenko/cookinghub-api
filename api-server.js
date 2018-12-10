@@ -232,8 +232,8 @@ app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 })
 
 // HEAD Request to authenticate/check if a user exists
-app.head('/api/v1.0/users/:user', async(req, res) => {
-
+app.head('/api/v1.0/login', async(req, res) => {
+	
 	// Retrieve the authorization credentials used by the client's request
 	const authorizationHeader = req.get('Authorization')
 

@@ -63,7 +63,6 @@ exports.getAll = async(queryObject) => {
 											.then((users) => users) // Retrieve the promise's value if resolved
 											.catch((reason) => reason) // Handle the promise's value if rejected
 
-	console.log(getAllUsersResponse)
 	// Return result of finding all users (either array of user objects or error object)
 	return getAllUsersResponse
 }
