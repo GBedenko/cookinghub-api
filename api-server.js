@@ -21,6 +21,7 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(express.json())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
@@ -39,7 +40,8 @@ const authentication = require('./modules/authentication')
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', '*')
+	res.header('Access-Control-Allow-Headers', '*')
+	res.header('Content-Type', 'application/json')
 	next()
 })
 
@@ -114,7 +116,7 @@ app.post('/api/v1.0/recipes', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
-
+	
 	// Call controller to update the recipe for the provided id and updated object from the provided request
 	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
 
@@ -123,7 +125,26 @@ app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 		res.status(httpStatus.OK).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
 	} else {
 		// If updating recipe was unsuccessful, return 400 status code and object confirming request response
-		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeUpdatedSuccessfully: updateRecipeResponse})
+	}
+})
+
+/**
+ * PATCH Request to update a recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/recipes/:recipe_id', async(req, res) => {
+	
+	// Call controller to update the recipe for the provided id and updated object from the provided request
+	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
+
+	if(updateRecipeResponse) {
+		// If updating recipe was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
+	} else {
+		// If updating recipe was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeUpdatedSuccessfully: updateRecipeResponse})
 	}
 })
 
@@ -142,7 +163,7 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 		res.status(httpStatus.OK).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
 	} else {
 		// If deleting recipe was unsuccessful, return 400 status code and object confirming request response
-		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeDeletedSuccessfully: deleteRecipeResponse})
 	}
 })
 
