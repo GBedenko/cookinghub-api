@@ -20,7 +20,6 @@ const database = require('./mongodb-database')
 exports.add = async(recipeObject) => {
 
 	// Set default values for a new recipe
-	recipeObject.views = 0
 	recipeObject.likes = 0
 	recipeObject.dislikes = 0
 	
