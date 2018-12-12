@@ -63,7 +63,11 @@ app.use((req, res, next) => {
 //     }
 // })
 
-// HEAD Request to authenticate/check if a user exists
+/**
+ * HEAD Request to login and authenticate a user using a client's request authorization header
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.head('/api/v1.0/login', async(req, res) => {
 	
 	// Retrieve the authorization credentials used by the client's request
@@ -270,7 +274,11 @@ app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all ratings
+/**
+ * GET Request to retrieve all ratings
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/ratings', async(req, res) => {
 
 	// Call controller to retrieve all ratings
@@ -280,7 +288,11 @@ app.get('/api/v1.0/ratings', async(req, res) => {
 	res.status(httpStatus.OK).send(ratings)
 })
 
-// GET Request to retrieve one rating
+/**
+ * GET Request to retrieve one rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to retrieve one rating
@@ -289,7 +301,11 @@ app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	res.status(httpStatus.OK).send(rating)
 })
 
-// POST Request to create a new rating
+/**
+ * POST Request to create a new rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/ratings', async(req, res) => {
 
 	// Call controller to create a new rating from the provided request
@@ -302,7 +318,11 @@ app.post('/api/v1.0/ratings', async(req, res) => {
 	}
 })
 
-// PUT Request to update a rating
+/**
+ * PUT Request to update a rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to create a new rating from the provided request
@@ -315,7 +335,11 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one rating
+/**
+ * DELETE Request to delete one rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to delete a rating corresponding to the HTML request's rating id
@@ -329,7 +353,11 @@ app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all image
+/**
+ * GET Request to retrieve all images
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/images', async(req, res) => {
 
 	// Call controller to retrieve all images
@@ -339,7 +367,11 @@ app.get('/api/v1.0/images', async(req, res) => {
 	res.status(httpStatus.OK).send(images)
 })
 
-// GET Request to retrieve one image
+/**
+ * GET Request to retrieve one image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to retrieve one image
@@ -348,7 +380,11 @@ app.get('/api/v1.0/images/:image_id', async(req, res) => {
 	res.status(httpStatus.OK).send(image)
 })
 
-// POST Request to create a new image
+/**
+ * POST Request to create a new image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/images', async(req, res) => {
 
 	// Call controller to create a new image from the provided request
@@ -361,7 +397,11 @@ app.post('/api/v1.0/images', async(req, res) => {
 	}
 })
 
-// PUT Request to update a image
+/**
+ * PUT Request to update an image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to create a new image from the provided request
@@ -374,7 +414,11 @@ app.put('/api/v1.0/images/:image_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one image
+/**
+ * DELETE Request to delete one image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to delete a image corresponding to the HTML request's image id
@@ -388,7 +432,11 @@ app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all notifications
+/**
+ * GET Request to retrieve all notifications
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/notifications', async(req, res) => {
 
 	// Call controller to retrieve all notifications
@@ -398,7 +446,11 @@ app.get('/api/v1.0/notifications', async(req, res) => {
 	res.status(httpStatus.OK).send(notifications)
 })
 
-// GET Request to retrieve one notification
+/**
+ * GET Request to retrieve one notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to retrieve one notification
@@ -407,7 +459,11 @@ app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	res.status(httpStatus.OK).send(notification)
 })
 
-// POST Request to create a new notification
+/**
+ * POST Request to create a new notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/notifications', async(req, res) => {
 
 	// Call controller to create a new notification from the provided request
@@ -420,7 +476,11 @@ app.post('/api/v1.0/notifications', async(req, res) => {
 	}
 })
 
-// PUT Request to update a notification
+/**
+ * PUT Request to update a notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to create a new notification from the provided request
@@ -433,7 +493,11 @@ app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one notification
+/**
+ * DELETE Request to delete one notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to delete a notification corresponding to the HTML request's notification id
