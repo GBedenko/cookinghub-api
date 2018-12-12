@@ -19,10 +19,13 @@ const database = require('./mongodb-database')
  */
 exports.add = async(recipeObject) => {
 
-	// Call database to insert new resource with the provided recipe object 
+	// Set default values for a new recipe
+	recipeObject.likes = 0
+	recipeObject.dislikes = 0
+
+	// Call database to insert new resource with the provided recipe object
 	const addRecipeResponse = await database.addResourceToCollection(databaseURL, recipesCollection, recipeObject)
-										.then((result) => result) // Retrieve the promise's value if resolved
-										.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
 
 	// Return the result of adding a new recipe (either true or error object)
 	return addRecipeResponse
@@ -35,10 +38,10 @@ exports.add = async(recipeObject) => {
  */
 exports.getById = async(recipeId) => {
 
-	// Call database to find one resource with the provided recipe id 
+	// Call database to find one resource with the provided recipe id
 	const getRecipeResponse = await database.getResourceFromCollection(databaseURL, recipesCollection, recipeId)
-										.then((recipe) => recipe) // Retrieve the promise's value if resolved
-										.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((recipe) => recipe) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return result of finding one recipe (either recipe object or error object)
 	return getRecipeResponse
@@ -54,21 +57,20 @@ exports.getAll = async(queryObject) => {
 	// Set default search query
 	let searchObject = {}
 
-	// If a query parameter was requested, set the searchObject to look
-	// for the parameter within the name of a recipe
+	// If a query parameter was requested, set the searchObject to look for the parameter within the name of a recipe
 	if(queryObject.query) searchObject = {name: new RegExp(queryObject.query, 'i')}
 
 	// Set default pagination values if they aren't provided
-	let paginationObject = {limit: 0, skip: 0}
+	const paginationObject = {limit: 0, skip: 0}
 
 	// If limit value is provided in query parameters, assign it to paginationObject
 	if(queryObject.limit) paginationObject.limit = parseInt(queryObject.limit)
-	
+
 	// If skip value is provided in query parameters, assign it to paginationObject
 	if(queryObject.skip) paginationObject.skip = parseInt(queryObject.skip)
 
-	// Set default sort query 
-	let sortObject = {}	
+	// Set default sort query
+	let sortObject = {}
 
 	// Assign all remaining key parameters to the sort object
 	// Sort values are all other parameters passed, apart from the limit, skip or query values
@@ -76,16 +78,15 @@ exports.getAll = async(queryObject) => {
 	delete sortObject.limit
 	delete sortObject.skip
 	delete sortObject.query
-	
+
 	// For every sort parameter, ensure that its value is an integer so that mongodb can use it
-	for (let key in sortObject) {
+	for (const key in sortObject) {
 		sortObject[key] = parseInt(sortObject[key])
 	}
-	
+
 	// Call database to find resources with the provided query object or no query object
 	const getAllRecipesResponse = await database.getAllFromCollection(databaseURL, recipesCollection, searchObject, paginationObject, sortObject)
-											.then((recipes) => recipes) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((recipes) => recipes) // Retrieve the promise's value if resolved
 
 	// Return result of finding all recipes (either array of recipe objects or error object)
 	return getAllRecipesResponse
@@ -101,8 +102,8 @@ exports.update = async(recipeID, newRecipeDetailsObject) => {
 
 	// Call database to update a resource with the provided id and new resource object
 	const updateRecipeResponse = await database.updateResource(databaseURL, recipesCollection, recipeID, newRecipeDetailsObject)
-											.then((result) => result) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return the result of updating the recipe (either true or error object)
 	return updateRecipeResponse
@@ -117,8 +118,8 @@ exports.delete = async(recipeID) => {
 
 	// Call database to delete a resource with the provided id
 	const deleteRecipeResponse = await database.deleteResource(databaseURL, recipesCollection, recipeID)
-											.then((result) => result) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return the result of deleting the recipe (either true or error object)
 	return deleteRecipeResponse

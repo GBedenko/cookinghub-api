@@ -21,6 +21,7 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(express.json())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
@@ -30,7 +31,6 @@ const port = 8080
 
 // Import controllers used for processing requests logic
 const imagesController = require('./modules/images-controller')
-const loginsController = require('./modules/logins-controller')
 const notificationsController = require('./modules/notifications-controller')
 const ratingsController = require('./modules/ratings-controller')
 const recipesController = require('./modules/recipes-controller')
@@ -39,7 +39,8 @@ const authentication = require('./modules/authentication')
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', '*')
+	res.header('Access-Control-Allow-Headers', '*')
+	res.header('Content-Type', 'application/json')
 	next()
 })
 
@@ -62,12 +63,34 @@ app.use((req, res, next) => {
 // })
 
 /**
+ * HEAD Request to login and authenticate a user using a client's request authorization header
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.head('/api/v1.0/login', async(req, res) => {
+
+	// Retrieve the authorization credentials used by the client's request
+	const authorizationHeader = req.get('Authorization')
+
+	// Using authentication module, check if the user exists for not
+	const userExists = await authentication.checkUserCredentials(authorizationHeader)
+
+	if(userExists) {
+		// If user exists, return status 200
+		res.status(httpStatus.OK).send()
+	} else {
+		// If user doesn't exist, return status 401
+		res.status(httpStatus.UNAUTHORIZED).send()
+	}
+})
+
+/**
  * GET Request to retrieve all recipes
  * @param {Object} req - HTTP request object from the client
  * @param {Object} res - HTTP response object from the server
  */
 app.get('/api/v1.0/recipes', async(req, res) => {
-	
+
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
@@ -95,7 +118,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/recipes', async(req, res) => {
-	
+
 	// Call controller to create a new recipe using the provided request body
 	const addRecipeResponse = await recipesController.add(req.body)
 
@@ -123,7 +146,26 @@ app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 		res.status(httpStatus.OK).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
 	} else {
 		// If updating recipe was unsuccessful, return 400 status code and object confirming request response
-		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeUpdatedSuccessfully: updateRecipeResponse})
+	}
+})
+
+/**
+ * PATCH Request to update a recipe
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/recipes/:recipe_id', async(req, res) => {
+
+	// Call controller to update the recipe for the provided id and updated object from the provided request
+	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
+
+	if(updateRecipeResponse) {
+		// If updating recipe was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', recipeUpdatedSuccessfully: updateRecipeResponse})
+	} else {
+		// If updating recipe was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeUpdatedSuccessfully: updateRecipeResponse})
 	}
 })
 
@@ -142,88 +184,119 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 		res.status(httpStatus.OK).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
 	} else {
 		// If deleting recipe was unsuccessful, return 400 status code and object confirming request response
-		res.status(httpStatus.BAD_REQUEST).send({status: 'success', recipeDeletedSuccessfully: deleteRecipeResponse})
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', recipeDeletedSuccessfully: deleteRecipeResponse})
 	}
 })
 
-// GET Request to retrieve all users
+/**
+ * GET Request to retrieve all users
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/users', async(req, res) => {
 
-	// Call controller to retrieve all users
-	// Waits for response from controller before continuing (async/await)
-	const users = await usersController.getAll()
+	// Call controller to retrieve all users for the client's query
+	const users = await usersController.getAll(req.query)
 
+	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(users)
 })
 
-// GET Request to retrieve one user
-app.get('/api/v1.0/user/:user_id', async(req, res) => {
+/**
+ * GET Request to retrieve one user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.get('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to retrieve one user
+	// Call controller to retrieve one user using the provided id
 	const user = await usersController.getById(req.params.user_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(user)
 })
 
-// POST Request to create a new user
+/**
+ * POST Request to create a new user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/users', async(req, res) => {
 
-	// Call controller to create a new user from the provided request
-	const response = await usersController.add(req.body)
+	// Call controller to create a new user using the provided request body
+	const addUserResponse = await usersController.add(req.body)
 
-	if(response) {
-		res.status(httpStatus.OK).send('User added succesfully\n')
+	if(addUserResponse) {
+		// If adding user was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', userAddedSuccessfully: addUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting the user\n')
+		// If adding user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userAddedSuccessfully: addUserResponse})
 	}
 })
 
-// PUT Request to update a user
+/**
+ * PUT Request to update a user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to create a new user from the provided request
-	const userUpdateResponse = await usersController.update(req.params.user_id, req.body)
+	// Call controller to update the user for the provided id and updated object from the provided request
+	const updateUserResponse = await usersController.update(req.params.user_id, req.body)
 
-	if(userUpdateResponse) {
-		res.status(httpStatus.OK).send('User with id: ' + req.params.user_id + ' has been updated\n')
+	if(updateUserResponse) {
+		// If updating user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating the user\n')
+		// If updating user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
 	}
 })
 
-// DELETE Request to delete one user
+/**
+ * PATCH Request to update a user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/users/:user_id', async(req, res) => {
+
+	// Call controller to update the user for the provided id and updated object from the provided request
+	const updateUserResponse = await usersController.update(req.params.user_id, req.body)
+
+	if(updateUserResponse) {
+		// If updating user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
+	} else {
+		// If updating user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userUpdatedSuccessfully: updateUserResponse})
+	}
+})
+
+/**
+ * DELETE Request to delete one user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/users/:user_id', async(req, res) => {
 
-	// Call controller to delete a user corresponding to the HTML request's user id
-	// Once completed, return back to client a message and status code confirming the user was deleted
-	const userDeleteResponse = await usersController.delete(req.params.user_id)
+	// Call controller to delete a user using the provided user id from client's request
+	const deleteUserResponse = await usersController.delete(req.params.user_id)
 
-	if(userDeleteResponse) {
-		res.status(httpStatus.OK).send('User with id: ' + req.params.user_id + ' has been deleted\n')
+	if(deleteUserResponse) {
+		// If deleting user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userDeletedSuccessfully: deleteUserResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your user\n')
+		// If deleting user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'success', userDeletedSuccessfully: deleteUserResponse})
 	}
 })
 
-// HEAD Request to authenticate/check if a user exists
-app.head('/api/v1.0/users/:user', async(req, res) => {
-
-	// Retrieve the authorization credentials used by the client's request
-	const authorizationHeader = req.get('Authorization')
-
-	// Using authentication module, check if the user exists for not
-	const userExists = await authentication.checkUserCredentials(authorizationHeader)
-
-	if(userExists) {
-		// If user exists, return status 200
-		res.status(httpStatus.OK).send()
-	} else {
-		// If user doesn't exist, return status 401
-		res.status(httpStatus.UNAUTHORIZED).send()
-	}
-})
-
-// GET Request to retrieve all ratings
+/**
+ * GET Request to retrieve all ratings
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/ratings', async(req, res) => {
 
 	// Call controller to retrieve all ratings
@@ -233,7 +306,11 @@ app.get('/api/v1.0/ratings', async(req, res) => {
 	res.status(httpStatus.OK).send(ratings)
 })
 
-// GET Request to retrieve one rating
+/**
+ * GET Request to retrieve one rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to retrieve one rating
@@ -242,7 +319,11 @@ app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	res.status(httpStatus.OK).send(rating)
 })
 
-// POST Request to create a new rating
+/**
+ * POST Request to create a new rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/ratings', async(req, res) => {
 
 	// Call controller to create a new rating from the provided request
@@ -255,7 +336,11 @@ app.post('/api/v1.0/ratings', async(req, res) => {
 	}
 })
 
-// PUT Request to update a rating
+/**
+ * PUT Request to update a rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to create a new rating from the provided request
@@ -268,7 +353,30 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one rating
+/**
+ * PATCH Request to update a rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/ratings/:rating_id', async(req, res) => {
+
+	// Call controller to update the rating for the provided id and updated object from the provided request
+	const updateRatingResponse = await ratingsController.update(req.params.rating_id, req.body)
+
+	if(updateRatingResponse) {
+		// If updating rating was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', ratingUpdatedSuccessfully: updateRatingResponse})
+	} else {
+		// If updating rating was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingUpdatedSuccessfully: updateRatingResponse})
+	}
+})
+
+/**
+ * DELETE Request to delete one rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 
 	// Call controller to delete a rating corresponding to the HTML request's rating id
@@ -282,7 +390,11 @@ app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all image
+/**
+ * GET Request to retrieve all images
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/images', async(req, res) => {
 
 	// Call controller to retrieve all images
@@ -292,7 +404,11 @@ app.get('/api/v1.0/images', async(req, res) => {
 	res.status(httpStatus.OK).send(images)
 })
 
-// GET Request to retrieve one image
+/**
+ * GET Request to retrieve one image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to retrieve one image
@@ -301,7 +417,11 @@ app.get('/api/v1.0/images/:image_id', async(req, res) => {
 	res.status(httpStatus.OK).send(image)
 })
 
-// POST Request to create a new image
+/**
+ * POST Request to create a new image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/images', async(req, res) => {
 
 	// Call controller to create a new image from the provided request
@@ -314,7 +434,11 @@ app.post('/api/v1.0/images', async(req, res) => {
 	}
 })
 
-// PUT Request to update a image
+/**
+ * PUT Request to update an image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to create a new image from the provided request
@@ -327,7 +451,30 @@ app.put('/api/v1.0/images/:image_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one image
+/**
+ * PATCH Request to update a image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/images/:image_id', async(req, res) => {
+
+	// Call controller to update the image for the provided id and updated object from the provided request
+	const updateImageResponse = await imagesController.update(req.params.image_id, req.body)
+
+	if(updateImageResponse) {
+		// If updating image was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', imageUpdatedSuccessfully: updateImageResponse})
+	} else {
+		// If updating image was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', imageUpdatedSuccessfully: updateImageResponse})
+	}
+})
+
+/**
+ * DELETE Request to delete one image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 
 	// Call controller to delete a image corresponding to the HTML request's image id
@@ -341,7 +488,11 @@ app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 	}
 })
 
-// GET Request to retrieve all notifications
+/**
+ * GET Request to retrieve all notifications
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/notifications', async(req, res) => {
 
 	// Call controller to retrieve all notifications
@@ -351,7 +502,11 @@ app.get('/api/v1.0/notifications', async(req, res) => {
 	res.status(httpStatus.OK).send(notifications)
 })
 
-// GET Request to retrieve one notification
+/**
+ * GET Request to retrieve one notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to retrieve one notification
@@ -360,7 +515,11 @@ app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	res.status(httpStatus.OK).send(notification)
 })
 
-// POST Request to create a new notification
+/**
+ * POST Request to create a new notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.post('/api/v1.0/notifications', async(req, res) => {
 
 	// Call controller to create a new notification from the provided request
@@ -373,7 +532,11 @@ app.post('/api/v1.0/notifications', async(req, res) => {
 	}
 })
 
-// PUT Request to update a notification
+/**
+ * PUT Request to update a notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to create a new notification from the provided request
@@ -386,7 +549,30 @@ app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	}
 })
 
-// DELETE Request to delete one notification
+/**
+ * PATCH Request to update a notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/notifications/:notification_id', async(req, res) => {
+
+	// Call controller to update the notification for the provided id and updated object from the provided request
+	const updateNotificationResponse = await notificationsController.update(req.params.notification_id, req.body)
+
+	if(updateNotificationResponse) {
+		// If updating notification was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', notificationUpdatedSuccessfully: updateNotificationResponse})
+	} else {
+		// If updating notification was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', notificationUpdatedSuccessfully: updateNotificationResponse})
+	}
+})
+
+/**
+ * DELETE Request to delete one notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
 app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
 
 	// Call controller to delete a notification corresponding to the HTML request's notification id
@@ -397,65 +583,6 @@ app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
 		res.status(httpStatus.OK).send('notification with id: ' + req.params.notification_id + ' has been deleted\n')
 	} else {
 		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your notification\n')
-	}
-})
-
-// GET Request to retrieve all logins
-app.get('/api/v1.0/logins', async(req, res) => {
-
-	// Call controller to retrieve all logins
-	// Waits for response from controller before continuing (async/await)
-	const logins = await loginsController.getAll()
-
-	res.status(httpStatus.OK).send(logins)
-})
-
-// GET Request to retrieve one login
-app.get('/api/v1.0/logins/:login_id', async(req, res) => {
-
-	// Call controller to retrieve one login
-	const login = await loginsController.getById(req.params.login_id)
-
-	res.status(httpStatus.OK).send(login)
-})
-
-// POST Request to create a new login
-app.post('/api/v1.0/logins', async(req, res) => {
-
-	// Call controller to create a new login from the provided request
-	const response = await loginsController.add(req.body)
-
-	if(response) {
-		res.status(httpStatus.OK).send('login added succesfully\n')
-	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting your login\n')
-	}
-})
-
-// PUT Request to update a login
-app.put('/api/v1.0/logins/:login_id', async(req, res) => {
-
-	// Call controller to create a new login from the provided request
-	const loginUpdateResponse = await loginsController.update(req.params.login_id, req.body)
-
-	if(loginUpdateResponse) {
-		res.status(httpStatus.OK).send('login with id: ' + req.params.login_id + ' has been updated\n')
-	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your login\n')
-	}
-})
-
-// DELETE Request to delete one login
-app.delete('/api/v1.0/logins/:login_id', async(req, res) => {
-
-	// Call controller to delete a login corresponding to the HTML request's login id
-	// Once completed, return back to client a message and status code confirming the login was deleted
-	const loginDeleteResponse = await loginsController.delete(req.params.login_id)
-
-	if(loginDeleteResponse) {
-		res.status(httpStatus.OK).send('login with id: ' + req.params.login_id + ' has been deleted\n')
-	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your login\n')
 	}
 })
 

@@ -38,17 +38,14 @@ exports.addResourceToCollection = (databaseURL, collectionName, newResource) => 
 			// MongoDB query to insert one document into the provided collection
 			dbo.collection(collectionName).insertOne(newResource, (err, result) => {
 
-				// If error performing the insert query, reject the promise with an error object
-				if(err)	reject(new Error('Unable to insert resource into MongoDB'))
-
 				// Log to confirm document was successfully inserted
 				console.log('Document inserted to mongodb database: ' + databaseName + ', collection: ' + collectionName)
 
 				// Close database connection
 				db.close()
-				
+
 				// Resolve the promise with true to confirm the insert has successfully completed
-				if(result) resolve(true)
+				resolve(true)
 			})
 
 		} catch (err) {
@@ -84,9 +81,6 @@ exports.getAllFromCollection = (databaseURL, collectionName, searchObject, pagin
 			// Uses the searchObject and query parameters if they are provided
 			dbo.collection(collectionName).find(searchObject).skip(paginationObject.skip).limit(paginationObject.limit).sort(sortObject).toArray((err, result) => {
 
-				// If error performing the find query, reject the promise with an error object
-				if(err)	reject(new Error('Unable to perform find query in MongoDB'))
-
 				// Log to confirm query was successfully performed
 				console.log('Requesting documents from mongodb database')
 
@@ -94,7 +88,7 @@ exports.getAllFromCollection = (databaseURL, collectionName, searchObject, pagin
 				db.close()
 
 				// Resolve the promise with true to confirm the find query has successfully completed
-				if(result) resolve(result)
+				resolve(result)
 			})
 
 		} catch (err) {
@@ -127,9 +121,6 @@ exports.getResourceFromCollection = (databaseURL, collectionName, resourceID) =>
 			// Mongodb query to find one resource from the collection based on its id and saves the result
 			// Once completed, pass the result as the resolve parameter of the promise
 			dbo.collection(collectionName).findOne({'_id': new mongodb.ObjectId(resourceID)}, (err, result) => {
-				
-				// If error performing the find query, reject the promise with an error object
-				if(err)	reject(new Error('Unable to perform find query in MongoDB'))
 
 				// Log to confirm query was successfully performed
 				console.log('Requesting one document from mongodb database')
@@ -138,7 +129,7 @@ exports.getResourceFromCollection = (databaseURL, collectionName, resourceID) =>
 				db.close()
 
 				// Resolve the promise with true to confirm the find query has successfully completed
-				if(result) resolve(result)
+				resolve(result)
 			})
 
 		} catch (err) {
@@ -171,18 +162,15 @@ exports.updateResource = (databaseURL, collectionName, resourceID, newValuesObje
 			// Mongodb query to update one resource from the collection using the id, collection and new object provided
 			// Once completed, resolves the promise as true to confirm the update completed
 			dbo.collection(collectionName).updateOne({_id: new mongodb.ObjectID(resourceID)}, {$set: newValuesObject}, (err, result) => {
-				
-				// If error performing the update query, reject the promise with an error object
-				if(err)	reject(new Error('Unable to perform update query in MongoDB'))
 
 				// Log to confirm the resource was successfully updated
 				console.log('Resource with id ' + resourceID + ' has been updated')
-				
+
 				// Close database connection
 				db.close()
 
 				// Resolve the promise with true to confirm the update query has successfully completed
-				if(result) resolve(true)
+				resolve(true)
 			})
 
 		} catch (err) {
@@ -216,9 +204,6 @@ exports.deleteResource = (databaseURL, collectionName, resourceID) => new Promis
 			// Once completed, resolves the promise as true to confirm deleting the resource was completed
 			dbo.collection(collectionName).deleteOne({_id: new mongodb.ObjectID(resourceID)}, (err, result) => {
 
-				// If error performing the delete, reject the promise with an error object
-				if(err)	reject(new Error('Unable to perform delete query in MongoDB'))
-
 				// Log to confirm the resource was successfully deleted
 				console.log('Resource with id ' + resourceID + ' has been deleted')
 
@@ -226,7 +211,7 @@ exports.deleteResource = (databaseURL, collectionName, resourceID) => new Promis
 				db.close()
 
 				// Resolve the promise with true to confirm the update query has successfully completed
-				if(result) resolve(true)
+				resolve(true)
 			})
 
 		} catch (err) {
