@@ -37,6 +37,8 @@ const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
 const authentication = require('./modules/authentication')
 
+// Set server's response header allow requests from any host, to allow request headers
+// and will return json content type
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Headers', '*')
@@ -44,23 +46,8 @@ app.use((req, res, next) => {
 	next()
 })
 
-// app.all('*',function(req,res,next){
-//     if(req.isAuthenticated()){
-//         next();
-//     }else{
-//         next(new Error(401)); // 401 Not Authorized
-//     }
-// })
-
-// app.use((err,req,res,next) => {
-//     // Just basic, should be filled out to next()
-//     // or respond on all possible code paths
-//     if(err instanceof Error){
-//         if(err.message === '401'){
-//             res.render('error401');
-//         }
-//     }
-// })
+// Every client request must use the middleware module to check the user is authorized
+app.use(authentication.checkAuthorizationHeaderMiddleware)
 
 /**
  * HEAD Request to login and authenticate a user using a client's request authorization header
