@@ -256,6 +256,25 @@ app.put('/api/v1.0/users/:user_id', async(req, res) => {
 })
 
 /**
+ * PATCH Request to update a user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/users/:user_id', async(req, res) => {
+
+	// Call controller to update the user for the provided id and updated object from the provided request
+	const updateUserResponse = await usersController.update(req.params.user_id, req.body)
+
+	if(updateUserResponse) {
+		// If updating user was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', userUpdatedSuccessfully: updateUserResponse})
+	} else {
+		// If updating user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userUpdatedSuccessfully: updateUserResponse})
+	}
+})
+
+/**
  * DELETE Request to delete one user
  * @param {Object} req - HTTP request object from the client
  * @param {Object} res - HTTP response object from the server
@@ -332,6 +351,25 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 		res.status(httpStatus.OK).send('Rating with id: ' + req.params.rating_id + ' has been updated\n')
 	} else {
 		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your rating\n')
+	}
+})
+
+/**
+ * PATCH Request to update a rating
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/ratings/:rating_id', async(req, res) => {
+
+	// Call controller to update the rating for the provided id and updated object from the provided request
+	const updateRatingResponse = await ratingsController.update(req.params.rating_id, req.body)
+
+	if(updateRatingResponse) {
+		// If updating rating was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', ratingUpdatedSuccessfully: updateRatingResponse})
+	} else {
+		// If updating rating was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingUpdatedSuccessfully: updateRatingResponse})
 	}
 })
 
@@ -415,6 +453,25 @@ app.put('/api/v1.0/images/:image_id', async(req, res) => {
 })
 
 /**
+ * PATCH Request to update a image
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/images/:image_id', async(req, res) => {
+
+	// Call controller to update the image for the provided id and updated object from the provided request
+	const updateImageResponse = await imagesController.update(req.params.image_id, req.body)
+
+	if(updateImageResponse) {
+		// If updating image was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', imageUpdatedSuccessfully: updateImageResponse})
+	} else {
+		// If updating image was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', imageUpdatedSuccessfully: updateImageResponse})
+	}
+})
+
+/**
  * DELETE Request to delete one image
  * @param {Object} req - HTTP request object from the client
  * @param {Object} res - HTTP response object from the server
@@ -490,6 +547,25 @@ app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 		res.status(httpStatus.OK).send('notification with id: ' + req.params.notification_id + ' has been updated\n')
 	} else {
 		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your notification\n')
+	}
+})
+
+/**
+ * PATCH Request to update a notification
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.patch('/api/v1.0/notifications/:notification_id', async(req, res) => {
+
+	// Call controller to update the notification for the provided id and updated object from the provided request
+	const updateNotificationResponse = await notificationsController.update(req.params.notification_id, req.body)
+
+	if(updateNotificationResponse) {
+		// If updating notification was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', notificationUpdatedSuccessfully: updateNotificationResponse})
+	} else {
+		// If updating notification was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', notificationUpdatedSuccessfully: updateNotificationResponse})
 	}
 })
 
