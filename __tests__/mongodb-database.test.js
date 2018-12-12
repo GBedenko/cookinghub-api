@@ -8,7 +8,9 @@ describe('Adding a new resource to a mongodb collection', async() => {
 		// Function to find the recipe that the tests will add to the database
 		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
 			'recipes',
-			{'name': 'Test Recipe Name'}).then((result) => result)
+			{'name': 'Test Recipe Name'},
+			{limit: 0, skip: 0},
+			{}).then((result) => result)
 
 		// Call the function and wait for the response
 		const findAddedRecipeResponse = await findAddedRecipe
@@ -50,7 +52,9 @@ describe('Requesting one resource from a mongodb collection', async() => {
 
 		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
 			'recipes',
-			{'name': 'Test Recipe Name'}).then((result) => result)
+			{'name': 'Test Recipe Name'},
+			{limit: 0, skip: 0},
+			{}).then((result) => result)
 
 		const findAddedRecipeResponse = await findAddedRecipe
 
@@ -88,7 +92,10 @@ describe('Requesting all resources from a mongodb collection', async() => {
 		//expect.assertions(1)
 
 		const response = await mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
-			'recipes').then((recipe) => recipe)
+			'recipes',
+			{},
+			{limit: 0, skip: 0},
+			{}).then((recipe) => recipe)
 
 		expect(Array.isArray([response])).toBe(true)
 		done()
@@ -107,7 +114,9 @@ describe('Updating a resource in a mongodb collection', async() => {
 
 		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
 			'recipes',
-			{'name': 'Test Recipe Name'}).then((result) => result)
+			{'name': 'Test Recipe Name'},
+			{limit: 0, skip: 0},
+			{}).then((result) => result)
 
 		const findAddedRecipeResponse = await findAddedRecipe
 
@@ -149,7 +158,9 @@ describe('Deleting a resource in a mongodb collection', async() => {
 
 		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
 			'recipes',
-			{'name': 'Test Recipe Name'}).then((result) => result)
+			{'name': 'Test Recipe Name'},
+			{limit: 0, skip: 0},
+			{}).then((result) => result)
 
 		const findAddedRecipeResponse = await findAddedRecipe
 
@@ -178,46 +189,71 @@ describe('Deleting a resource in a mongodb collection', async() => {
 	})
 })
 
-describe('Finding a resource in a mongodb collection', async() => {
+describe('Requesting database interactions with incorrect credentials', async() => {
 
-	let resourceToFindId
-	let resourceToFind
-
-	beforeEach(async() => {
-		// Add a new object to mongodb, which will be tested that it can be updated in the test
-		await mongoDB.addResourceToCollection('mongodb://localhost:27017/yummy_recipes',
-			'recipes',
-			{'name': 'Test Recipe Name'})
-
-		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
-			'recipes',
-			{'name': 'Test Recipe Name'}).then((result) => result)
-
-		const findAddedRecipeResponse = await findAddedRecipe
-
-		resourceToFind = findAddedRecipeResponse
-
-		// Save the id of the test recipe that was added
-		resourceToFindId = findAddedRecipeResponse[findAddedRecipeResponse.length-1]._id
+    test('Adding a new resource with incorrect database credentials returns a rejected database connection', async done => {
+        
+        // Send a test resource object to the correct database
+        const response = await mongoDB.addResourceToCollection("mongodb://wrongurl:27017/yummy_recipes",
+                                                                           "recipes",
+                                                                           {"resource":"test resource"})
+                                                                           .then((result) => result)
+                                                                           .catch((reason) => reason)       
+        
+        expect(response).toEqual(Error('Unable to connect to MongoDB'))
+        
+        done()
+    })
+    
+    test('Requesting a resource with incorrect database credentials returns a rejected database connection', async done => {
+        
+        const response = await mongoDB.getResourceFromCollection("mongodb://wrongurl:27017/yummy_recipes",
+                                                                             "recipes",
+                                                                             1234)
+                                                                             .then((response) => response) 
+                                                                             .catch((reason) => reason)      
+        
+        expect(response).toEqual(Error('Unable to connect to MongoDB'))
+        
+        done()
+    })
+    
+    test('Requesting all resources with incorrect database credentials returns a rejected database connection', async done => {
+        
+        const response = await mongoDB.getAllFromCollection("mongodb://wrongurl:27017/yummy_recipes",
+                                                                             "recipes")
+                                                                             .then((response) => response) 
+                                                                             .catch((reason) => reason)      
+        
+        expect(response).toEqual(Error('Unable to connect to MongoDB'))
+        
+        done()
+    })
+    
+    test('Updating a resource with incorrect database credentials returns a rejected database connection', async done => {
+        
+        const response = await mongoDB.updateResource("mongodb://wrongurl:27017/yummy_recipes",
+                                                                             "recipes",
+                                                                             1234,
+                                                                             {"resource":"updated resource"})
+                                                                             .then((response) => response) 
+                                                                             .catch((reason) => reason)      
+        
+        expect(response).toEqual(Error('Unable to connect to MongoDB'))
+        
+        done()
 	})
-
-	afterEach(async() => {
-		// Delete the test recipe so that it doesn't affect live database
-		mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
-			'recipes',
-			resourceToFindId)
-	})
-
-	test('Finding a known resource in a mongodb collection returns the correct object', async done => {
-
-		//expect.assertions(1)
-
-		const findResponse = await mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
-			'recipes',
-			{'name': 'Test Recipe Name'}).then((response) => response)
-
-		expect(findResponse).toEqual(resourceToFind)
-
-		done()
+    
+    test('Deleting a resource with incorrect database credentials returns a rejected database connection', async done => {
+        
+        const response = await mongoDB.deleteResource("mongodb://wrongurl:27017/yummy_recipes",
+                                                                             "recipes",
+                                                                             1234)
+                                                                             .then((response) => response) 
+                                                                             .catch((reason) => reason)      
+        
+        expect(response).toEqual(Error('Unable to connect to MongoDB'))
+        
+        done()
 	})
 })

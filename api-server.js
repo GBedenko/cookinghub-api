@@ -31,7 +31,6 @@ const port = 8080
 
 // Import controllers used for processing requests logic
 const imagesController = require('./modules/images-controller')
-const loginsController = require('./modules/logins-controller')
 const notificationsController = require('./modules/notifications-controller')
 const ratingsController = require('./modules/ratings-controller')
 const recipesController = require('./modules/recipes-controller')
@@ -69,7 +68,7 @@ app.use((req, res, next) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.head('/api/v1.0/login', async(req, res) => {
-	
+
 	// Retrieve the authorization credentials used by the client's request
 	const authorizationHeader = req.get('Authorization')
 
@@ -91,7 +90,7 @@ app.head('/api/v1.0/login', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.get('/api/v1.0/recipes', async(req, res) => {
-	
+
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
@@ -119,7 +118,7 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/recipes', async(req, res) => {
-	
+
 	// Call controller to create a new recipe using the provided request body
 	const addRecipeResponse = await recipesController.add(req.body)
 
@@ -138,7 +137,7 @@ app.post('/api/v1.0/recipes', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
-	
+
 	// Call controller to update the recipe for the provided id and updated object from the provided request
 	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
 
@@ -157,7 +156,7 @@ app.put('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.patch('/api/v1.0/recipes/:recipe_id', async(req, res) => {
-	
+
 	// Call controller to update the recipe for the provided id and updated object from the provided request
 	const updateRecipeResponse = await recipesController.update(req.params.recipe_id, req.body)
 
@@ -195,7 +194,7 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.get('/api/v1.0/users', async(req, res) => {
-	
+
 	// Call controller to retrieve all users for the client's query
 	const users = await usersController.getAll(req.query)
 
@@ -223,7 +222,7 @@ app.get('/api/v1.0/users/:user_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/users', async(req, res) => {
-	
+
 	// Call controller to create a new user using the provided request body
 	const addUserResponse = await usersController.add(req.body)
 

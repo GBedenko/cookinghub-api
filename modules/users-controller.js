@@ -23,10 +23,9 @@ exports.add = async(userObject) => {
 	userObject.likes = 0
 	userObject.dislikes = 0
 
-	// Call database to insert new resource with the provided user object 
+	// Call database to insert new resource with the provided user object
 	const addUserResponse = await database.addResourceToCollection(databaseURL, usersCollection, userObject)
-										.then((result) => result) // Retrieve the promise's value if resolved
-										.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
 
 	// Return the result of adding a new user (either true or error object)
 	return addUserResponse
@@ -39,10 +38,10 @@ exports.add = async(userObject) => {
  */
 exports.getById = async(userId) => {
 
-	// Call database to find one resource with the provided user id 
+	// Call database to find one resource with the provided user id
 	const getUserResponse = await database.getResourceFromCollection(databaseURL, usersCollection, userId)
-										.then((user) => user) // Retrieve the promise's value if resolved
-										.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((user) => user) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return result of finding one user (either user object or error object)
 	return getUserResponse
@@ -53,19 +52,15 @@ exports.getById = async(userId) => {
  * @param {Object} [paginationObject] - Optional query object for which users you want to request
  * @returns {Array} Array of user objects retrieved from the request
  */
-exports.getAll = async(queryObject) => {
-
-	// Use query passed as the search criteria
-	const searchObject = queryObject
+exports.getAll = async(searchObject) => {
 
 	// Set default values for pagination and sort filter as these aren't used for users queries
 	const paginationObject = {limit: 0, skip: 0}
 	const sortObject = {}
-	
+
 	// Call database to find resources with the provided query object or no query object
 	const getAllUsersResponse = await database.getAllFromCollection(databaseURL, usersCollection, searchObject, paginationObject, sortObject)
-											.then((users) => users) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((users) => users) // Retrieve the promise's value if resolved
 
 	// Return result of finding all users (either array of user objects or error object)
 	return getAllUsersResponse
@@ -81,8 +76,8 @@ exports.update = async(userID, newUserDetailsObject) => {
 
 	// Call database to update a resource with the provided id and new resource object
 	const updateUserResponse = await database.updateResource(databaseURL, usersCollection, userID, newUserDetailsObject)
-											.then((result) => result) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return the result of updating the user (either true or error object)
 	return updateUserResponse
@@ -97,8 +92,8 @@ exports.delete = async(userID) => {
 
 	// Call database to delete a resource with the provided id
 	const deleteUserResponse = await database.deleteResource(databaseURL, usersCollection, userID)
-											.then((result) => result) // Retrieve the promise's value if resolved
-											.catch((reason) => reason) // Handle the promise's value if rejected
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
 
 	// Return the result of deleting the user (either true or error object)
 	return deleteUserResponse

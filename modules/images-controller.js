@@ -1,6 +1,6 @@
 'use strict'
 
-const databaseUrl = 'mongodb://localhost:27017/yummy_recipes'
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
 const imagesCollection = 'images'
 
 const database = require('./mongodb-database')
@@ -13,7 +13,7 @@ const database = require('./mongodb-database')
 // Function to add a new image
 exports.add = async(imageObject) => {
 
-	const addImage = database.addResourceToCollection(databaseUrl, imagesCollection, imageObject)
+	const addImage = database.addResourceToCollection(databaseURL, imagesCollection, imageObject)
 		.then((result) => result)
 		.catch((reason) => reason)
 
@@ -29,7 +29,7 @@ exports.add = async(imageObject) => {
  */
 exports.getById = async(imageId) => {
 
-	const getImage = database.getResourceFromCollection(databaseUrl, imagesCollection, imageId)
+	const getImage = database.getResourceFromCollection(databaseURL, imagesCollection, imageId)
 		.then((image) => image)
 		.catch((reason) => reason)
 
@@ -43,17 +43,15 @@ exports.getById = async(imageId) => {
  * @param {Object} [paginationObject] - Optional query object for which images you want to request
  * @returns {Array} Array of image objects retrieved from the request
  */
-exports.getAll = async(queryObject) => {
+exports.getAll = async(searchObject) => {
 
-	// Set defaults for search, pagination and sort queries (not yet available to be customised for requesting images)
-	let searchObject = {}
-	let paginationObject = {limit: 0, skip: 0}
-	let sortObject = {}
+	// Set defaults for pagination and sort queries (not yet available to be customised for requesting images)
+	const paginationObject = {limit: 0, skip: 0}
+	const sortObject = {}
 
 	// Call database to retrieve all resources from the collection
 	const results = database.getAllFromCollection(databaseURL, imagesCollection, searchObject, paginationObject, sortObject)
-						.then((results) => results) // Obtains the result from the Promise object
-						.catch((reason) => reason) // If the result was an error then handle the error
+		.then((results) => results) // Obtains the result from the Promise object
 
 	// Calls the results function, waits for response before continuing
 	const finalResult = await results
@@ -70,7 +68,7 @@ exports.getAll = async(queryObject) => {
  */
 exports.update = async(imageID, newImageDetailsObject) => {
 
-	const updateImage = database.updateResource(databaseUrl, imagesCollection, imageID, newImageDetailsObject)
+	const updateImage = database.updateResource(databaseURL, imagesCollection, imageID, newImageDetailsObject)
 		.then((image) => image)
 		.catch((reason) => reason)
 
@@ -86,7 +84,7 @@ exports.update = async(imageID, newImageDetailsObject) => {
  */
 exports.delete = async(imageID) => {
 
-	const deleteImage = database.deleteResource(databaseUrl, imagesCollection, imageID)
+	const deleteImage = database.deleteResource(databaseURL, imagesCollection, imageID)
 		.then((image) => image)
 		.catch((reason) => reason)
 

@@ -4,57 +4,116 @@ const recipesController = require('../modules/recipes-controller')
 
 jest.mock('../modules/mongodb-database')
 
-test('Adding a new recipe sends it to the database', async done => {
+describe('Add recipes controller functionality', async() => {
 
-	expect.assertions(1)
+	test('Adding a new recipe sends it to the database', async done => {
+                
+		const addRecipeResponse = await recipesController.add({"resource":"test resource"})
 
-	const response = await recipesController.add({'name': 'Test Name'})
-
-	expect(response).toBeTruthy()
-
-	done()
+		expect(addRecipeResponse).toBeTruthy()
+		
+		done()
+	})
 })
 
-test('Recieving a get request recieves an array response from the database', async done => {
+describe('Get all recipes controller functionality', () => {
 
-	expect.assertions(1)
+	test('Recieving a get request recieves an array response from the database', async done => {
+			
+		const response = await recipesController.getAll({})
+		
+		expect(response).toEqual([{"_id": 1234, "resource":"test resource"}])
+		
+		done()
+	})
 
-	const response = await recipesController.getAll()
+	test('Get request passing pagination and search query recieves an array response from the database', async done => {
+			
+		const response = await recipesController.getAll({limit: 1, skip: 1, query: "test"})
+		
+		expect(response).toEqual([{"_id": 1234, "resource":"test resource"}])
+		
+		done()
+	})
 
-	expect(response).toEqual([{'_id': 1234, 'name': 'Test Name'}])
-
-	done()
+	test('Get request passing a sort query recieves an array response from the database', async done => {
+			
+		const response = await recipesController.getAll({likes: 1})
+		
+		expect(response).toEqual([{"_id": 1234, "resource":"test resource"}])
+		
+		done()
+	})
 })
 
-test('Recieving a get request for one recipe recieves one recipe response from the database', async done => {
+describe('Get one recipe controller functionality', () => {
 
-	expect.assertions(1)
+	test('Requesting the database for one recipe recieves correct response from the database', async done => {
+                
+		const response = await recipesController.getById("1234")
 
-	const response = await recipesController.getById('1234')
+		expect(response).toEqual({"_id": 1234, "resource":"test resource"})
+		
+		done()
+	})
+        
+	test('Requesting the database for a recipe that doesnt exist returns a failed request from the database', async done => {
+                
+		const response = await recipesController.getById("6666")
 
-	expect(response).toEqual({'_id': 1234, 'name': 'Test Name'})
-
-	done()
+		expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+		
+		done()
+	})
 })
 
-test('Recieving a put request for one recipe recieves a success response from the database', async done => {
+describe('Update recipe controller functionality', () => {
 
-	expect.assertions(1)
+	test('Updating a recipe recieves a success response from the database', async done => {
+                
+		const response = await recipesController.update("1234", {"recipe":"test recipe updated"})
 
-	const response = await recipesController.update('1234', {'name': 'Test Name'})
+		expect(response).toBeTruthy()
+		
+		done()
+	})
+        
+	test('Updating a recipe with an empty new recipe object recieves a failed response from the database', async done => {
+                
+		const response = await recipesController.update("1234", {})
 
-	expect(response).toBeTruthy()
+		expect(response).toEqual(Error('Trying to update an object with an empty object'))
+		
+		done()
+	})
+        
+	test('Updating a recipe that doesnt exist recieves a failed response from the database', async done => {
+                
+		const response = await recipesController.update("6666", {"recipe":"test recipe updated"})
 
-	done()
+		expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+		
+		done()
+	})
 })
 
-test('Recieving a delete request for one recipe recieves a success response from the database', async done => {
+describe('Delete recipe controller functionality', () => {
 
-	// expect.assertions(1)
+	test('Deleting a recipe recieves a success response from the database', async done => {
+                
+		const response = await recipesController.delete("1234")
 
-	const response = await recipesController.delete('1234')
+		expect(response).toBeTruthy()
+		
+		done()
+	})
+        
+	test('Deleting a recipe that doesnt exist recieves a failed response from the database', async done => {
+                
+		const response = await recipesController.delete("6666")
 
-	expect(response).toBeTruthy()
-
-	done()
+		expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+		
+		done()
+	})
 })

@@ -1,6 +1,6 @@
 'use strict'
 
-const databaseUrl = 'mongodb://localhost:27017/yummy_recipes'
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
 const notificationsCollection = 'notifications'
 
 const database = require('./mongodb-database')
@@ -13,7 +13,7 @@ const database = require('./mongodb-database')
 // Function to add a new notification
 exports.add = async(notificationObject) => {
 
-	const addNotification = database.addResourceToCollection(databaseUrl, notificationsCollection, notificationObject)
+	const addNotification = database.addResourceToCollection(databaseURL, notificationsCollection, notificationObject)
 		.then((result) => result)
 		.catch((reason) => reason)
 
@@ -29,7 +29,7 @@ exports.add = async(notificationObject) => {
  */
 exports.getById = async(notificationId) => {
 
-	const getNotification = database.getResourceFromCollection(databaseUrl, notificationsCollection, notificationId)
+	const getNotification = database.getResourceFromCollection(databaseURL, notificationsCollection, notificationId)
 		.then((notification) => notification)
 		.catch((reason) => reason)
 
@@ -43,17 +43,15 @@ exports.getById = async(notificationId) => {
  * @param {Object} [paginationObject] - Optional query object for which notifications you want to request
  * @returns {Array} Array of notification objects retrieved from the request
  */
-exports.getAll = async(queryObject) => {
+exports.getAll = async(searchObject) => {
 
-	// Set defaults for search, pagination and sort queries (not yet available to be customised for requesting notifications)
-	let searchObject = {}
-	let paginationObject = {limit: 0, skip: 0}
-	let sortObject = {}
+	// Set defaults for pagination and sort queries (not yet available to be customised for requesting notifications)
+	const paginationObject = {limit: 0, skip: 0}
+	const sortObject = {}
 
 	// Call database to retrieve all resources from the collection
 	const results = database.getAllFromCollection(databaseURL, notificationsCollection, searchObject, paginationObject, sortObject)
-						.then((results) => results) // Obtains the result from the Promise object
-						.catch((reason) => reason) // If the result was an error then handle the error
+		.then((results) => results) // Obtains the result from the Promise object
 
 	// Calls the results function, waits for response before continuing
 	const finalResult = await results
@@ -70,7 +68,7 @@ exports.getAll = async(queryObject) => {
  */
 exports.update = async(notificationID, newNotificationDetailsObject) => {
 
-	const updateNotification = database.updateResource(databaseUrl, notificationsCollection, notificationID, newNotificationDetailsObject)
+	const updateNotification = database.updateResource(databaseURL, notificationsCollection, notificationID, newNotificationDetailsObject)
 		.then((notification) => notification)
 		.catch((reason) => reason)
 
@@ -86,7 +84,7 @@ exports.update = async(notificationID, newNotificationDetailsObject) => {
  */
 exports.delete = async(notificationID) => {
 
-	const deleteNotification = database.deleteResource(databaseUrl, notificationsCollection, notificationID)
+	const deleteNotification = database.deleteResource(databaseURL, notificationsCollection, notificationID)
 		.then((notification) => notification)
 		.catch((reason) => reason)
 

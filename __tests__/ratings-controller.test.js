@@ -4,57 +4,107 @@ const ratingsController = require('../modules/ratings-controller')
 
 jest.mock('../modules/mongodb-database')
 
-test('Adding a new rating sends it to the database', async done => {
+describe('Add ratings controller functionality', async() => {
 
-	expect.assertions(1)
+	test('Adding a new rating sends it to the database', async done => {
+                
+		const addRatingResponse = await ratingsController.add({"resource":"test resource"})
 
-	const response = await ratingsController.add({'name': 'Test Name'})
+		expect(addRatingResponse).toBeTruthy()
+		
+		done()
+	})
 
-	expect(response).toBeTruthy()
+	test('Adding an empty rating returns a failed request to the database', async done => {
+                
+		const addRatingResponse = await ratingsController.add({}).then((response) => response)
 
-	done()
+		expect(addRatingResponse).toEqual(Error('Trying to add an empty object'))
+		
+		done()
+	})
 })
 
-test('Recieving a get request recieves an array response from the database', async done => {
+describe('Get all ratings controller functionality', () => {
 
-	expect.assertions(1)
-
-	const response = await ratingsController.getAll()
-
-	expect(response).toEqual([{'_id': 1234, 'name': 'Test Name'}])
-
-	done()
+        test('Recieving a get request recieves an array response from the database', async done => {
+                
+                const response = await ratingsController.getAll()
+                
+                expect(response).toEqual([{"_id": 1234, "resource":"test resource"}])
+                
+                done()
+	})
 })
 
-test('Recieving a get request for one rating recieves one rating response from the database', async done => {
+describe('Get one rating controller functionality', () => {
 
-	expect.assertions(1)
+	test('Requesting the database for one rating recieves correct response from the database', async done => {
+                
+                const response = await ratingsController.getById("1234")
 
-	const response = await ratingsController.getById('1234')
+                expect(response).toEqual({"_id": 1234, "resource":"test resource"})
+                
+                done()
+        })
+        
+	test('Requesting the database for a rating that doesnt exist returns a failed request from the database', async done => {
+                
+                const response = await ratingsController.getById("6666")
 
-	expect(response).toEqual({'_id': 1234, 'name': 'Test Name'})
-
-	done()
+                expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+                
+                done()
+	})
 })
 
-test('Recieving a put request for one rating recieves a success response from the database', async done => {
+describe('Update rating controller functionality', () => {
 
-	expect.assertions(1)
+	test('Updating a rating recieves a success response from the database', async done => {
+                
+                const response = await ratingsController.update("1234", {"rating":"test rating updated"})
 
-	const response = await ratingsController.update('1234', {'name': 'Test Name'})
+                expect(response).toBeTruthy()
+                
+                done()
+        })
+        
+	test('Updating a rating with an empty new rating object recieves a failed response from the database', async done => {
+                
+                const response = await ratingsController.update("1234", {})
 
-	expect(response).toBeTruthy()
+                expect(response).toEqual(Error('Trying to update an object with an empty object'))
+                
+                done()
+	})
+        
+	test('Updating a rating that doesnt exist recieves a failed response from the database', async done => {
+                
+                const response = await ratingsController.update("6666", {"rating":"test rating updated"})
 
-	done()
+                expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+                
+                done()
+	})
 })
 
-test('Recieving a delete request for one rating recieves a success response from the database', async done => {
+describe('Delete rating controller functionality', () => {
 
-	// expect.assertions(1)
+	test('Deleting a rating recieves a success response from the database', async done => {
+                
+                const response = await ratingsController.delete("1234")
 
-	const response = await ratingsController.delete('1234')
+                expect(response).toBeTruthy()
+                
+                done()
+        })
+        
+	test('Deleting a rating that doesnt exist recieves a failed response from the database', async done => {
+                
+                const response = await ratingsController.delete("6666")
 
-	expect(response).toBeTruthy()
-
-	done()
+                expect(response).toEqual(Error('Trying to request an object that doesnt exist'))
+                
+                done()
+	})
 })

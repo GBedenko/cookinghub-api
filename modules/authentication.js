@@ -11,7 +11,7 @@ const usersController = require('./users-controller')
  * @returns {boolean} Confirm whether the authorization is approved or not (true if user details correct, otherwise false)
  */
 exports.checkUserCredentials = async(authorizationHeader) => {
-	
+
 	// Split word 'Basic' from the Authorization header
 	const [, hash] = authorizationHeader.split(' ')
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const databaseUrl = 'mongodb://localhost:27017/yummy_recipes'
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
 const ratingsCollection = 'ratings'
 
 const database = require('./mongodb-database')
@@ -13,7 +13,7 @@ const database = require('./mongodb-database')
 // Function to add a new rating
 exports.add = async(ratingObject) => {
 
-	const addRating = database.addResourceToCollection(databaseUrl, ratingsCollection, ratingObject)
+	const addRating = database.addResourceToCollection(databaseURL, ratingsCollection, ratingObject)
 		.then((result) => result)
 		.catch((reason) => reason)
 
@@ -29,7 +29,7 @@ exports.add = async(ratingObject) => {
  */
 exports.getById = async(ratingId) => {
 
-	const getRating = database.getResourceFromCollection(databaseUrl, ratingsCollection, ratingId)
+	const getRating = database.getResourceFromCollection(databaseURL, ratingsCollection, ratingId)
 		.then((rating) => rating)
 		.catch((reason) => reason)
 
@@ -43,17 +43,15 @@ exports.getById = async(ratingId) => {
  * @param {Object} [paginationObject] - Optional query object for which ratings you want to request
  * @returns {Array} Array of rating objects retrieved from the request
  */
-exports.getAll = async(queryObject) => {
+exports.getAll = async(searchObject) => {
 
-	// Set defaults for search, pagination and sort queries (not yet available to be customised for requesting ratings)
-	let searchObject = {}
-	let paginationObject = {limit: 0, skip: 0}
-	let sortObject = {}
+	// Set defaults pagination and sort queries (not yet available to be customised for requesting ratings)
+	const paginationObject = {limit: 0, skip: 0}
+	const sortObject = {}
 
 	// Call database to retrieve all resources from the collection
 	const results = database.getAllFromCollection(databaseURL, ratingsCollection, searchObject, paginationObject, sortObject)
-						.then((results) => results) // Obtains the result from the Promise object
-						.catch((reason) => reason) // If the result was an error then handle the error
+		.then((results) => results) // Obtains the result from the Promise object
 
 	// Calls the results function, waits for response before continuing
 	const finalResult = await results
@@ -70,7 +68,7 @@ exports.getAll = async(queryObject) => {
  */
 exports.update = async(ratingID, newRatingDetailsObject) => {
 
-	const updateRating = database.updateResource(databaseUrl, ratingsCollection, ratingID, newRatingDetailsObject)
+	const updateRating = database.updateResource(databaseURL, ratingsCollection, ratingID, newRatingDetailsObject)
 		.then((rating) => rating)
 		.catch((reason) => reason)
 
@@ -86,7 +84,7 @@ exports.update = async(ratingID, newRatingDetailsObject) => {
  */
 exports.delete = async(ratingID) => {
 
-	const deleteRating = database.deleteResource(databaseUrl, ratingsCollection, ratingID)
+	const deleteRating = database.deleteResource(databaseURL, ratingsCollection, ratingID)
 		.then((rating) => rating)
 		.catch((reason) => reason)
 
