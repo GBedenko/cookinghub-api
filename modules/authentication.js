@@ -5,6 +5,11 @@ const bcrypt = require('bcrypt')
 // Import module for communicating with users backend
 const usersController = require('./users-controller')
 
+/**
+ * Decrypts an authorization header and checks whether the user details are correct
+ * @param {Object} authorizationHeader - Basic authorization header sent with the client's request
+ * @returns {boolean} Confirm whether the authorization is approved or not (true if user details correct, otherwise false)
+ */
 exports.checkUserCredentials = async(authorizationHeader) => {
 	
 	// Split word 'Basic' from the Authorization header
