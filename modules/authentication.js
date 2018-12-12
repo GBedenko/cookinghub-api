@@ -56,7 +56,7 @@ const checkUserCredentials = async(authorizationHeader) => {
  * @returns Calls next() for the next route or sends back 401 status code
  */
 exports.checkAuthorizationHeaderMiddleware = async(req,res,next) => {
-
+	
 	// Retrieve the authorization header from the client's request
 	const userAuthenticated = await checkUserCredentials(req.get('Authorization'))
 

@@ -23,6 +23,8 @@ app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+const cors = require('cors')
+
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
 
@@ -39,12 +41,7 @@ const authentication = require('./modules/authentication')
 
 // Set server's response header allow requests from any host, to allow request headers
 // and will return json content type
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*')
-	res.header('Access-Control-Allow-Headers', '*')
-	res.header('Content-Type', 'application/json')
-	next()
-})
+app.use(cors())
 
 // Every client request must use the middleware module to check the user is authorized
 app.use(authentication.checkAuthorizationHeaderMiddleware)
@@ -56,19 +53,22 @@ app.use(authentication.checkAuthorizationHeaderMiddleware)
  */
 app.head('/api/v1.0/login', async(req, res) => {
 
-	// Retrieve the authorization credentials used by the client's request
-	const authorizationHeader = req.get('Authorization')
+	// Send 200 status code as request would have passed middleware to get to this endpoint
+	res.status(httpStatus.OK).send()
 
-	// Using authentication module, check if the user exists for not
-	const userExists = await authentication.checkUserCredentials(authorizationHeader)
+	// // Retrieve the authorization credentials used by the client's request
+	// const authorizationHeader = req.get('Authorization')
 
-	if(userExists) {
-		// If user exists, return status 200
-		res.status(httpStatus.OK).send()
-	} else {
-		// If user doesn't exist, return status 401
-		res.status(httpStatus.UNAUTHORIZED).send()
-	}
+	// // Using authentication module, check if the user exists for not
+	// const userExists = await authentication.checkAuthorizationHeader(authorizationHeader)
+	
+	// if(userExists) {
+	// 	// If user exists, return status 200
+	// 	res.status(httpStatus.OK).send()
+	// } else {
+	// 	// If user doesn't exist, return status 401
+	// 	res.status(httpStatus.UNAUTHORIZED).send()
+	// }
 })
 
 /**
