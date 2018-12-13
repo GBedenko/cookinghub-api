@@ -20,8 +20,7 @@ const database = require('./mongodb-database')
 exports.add = async(userObject) => {
 
 	// Set default values for a new user
-	userObject.likes = 0
-	userObject.dislikes = 0
+	userObject.roles = ['viewer']
 
 	// Call database to insert new resource with the provided user object
 	const addUserResponse = await database.addResourceToCollection(databaseURL, usersCollection, userObject)

@@ -72,3 +72,33 @@ exports.checkAuthorizationHeaderMiddleware = async(req,res,next) => {
 		res.status(httpStatus.UNAUTHORIZED).send()
 	}
 }
+
+/**
+ * Using an authorization header, retrieves the user object according to the provided credentials
+ * @param {Object} authorizationHeader - Basic authorization header sent with the client's request
+ * @returns {Object} User object that matches the authorization header
+ */
+exports.retrieveUserFromAuthorizationHeader = async(authorizationHeader) => {
+
+	// If no authorization header is provided, reject user credentials straight away
+	if(!authorizationHeader) return null
+
+	// Split word 'Basic' from the Authorization header
+	const [, hash] = authorizationHeader.split(' ')
+
+	let userCredentials
+	try {
+		// Get the username and password in plain text
+		userCredentials = Buffer.from(hash, 'base64').toString()
+	} catch(error) {
+		return null
+	}
+
+	// Split the username and password by the colon seperating them
+	const [username, password] = userCredentials.split(':')
+
+	// Retrieve the user from the db that matches the username the user entered
+	const existingUser = await usersController.getAll({username: username})
+
+	return existingUser
+}
