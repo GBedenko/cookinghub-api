@@ -22,8 +22,13 @@ const checkUserCredentials = async(authorizationHeader) => {
 	// Split word 'Basic' from the Authorization header
 	const [, hash] = authorizationHeader.split(' ')
 
-	// Get the username and password in plain text
-	const userCredentials = Buffer.from(hash, 'base64').toString()
+	let userCredentials
+	try {
+		// Get the username and password in plain text
+		userCredentials = Buffer.from(hash, 'base64').toString()
+	} catch(error) {
+		return false
+	}
 
 	// Split the username and password by the colon seperating them
 	const [username, password] = userCredentials.split(':')
@@ -56,7 +61,7 @@ const checkUserCredentials = async(authorizationHeader) => {
  * @returns Calls next() for the next route or sends back 401 status code
  */
 exports.checkAuthorizationHeaderMiddleware = async(req,res,next) => {
-	
+
 	// Retrieve the authorization header from the client's request
 	const userAuthenticated = await checkUserCredentials(req.get('Authorization'))
 

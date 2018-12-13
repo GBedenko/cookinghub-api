@@ -22,6 +22,7 @@ exports.add = async(recipeObject) => {
 	// Set default values for a new recipe
 	recipeObject.likes = 0
 	recipeObject.dislikes = 0
+	recipeObject.created = new Date()
 
 	// Call database to insert new resource with the provided recipe object
 	const addRecipeResponse = await database.addResourceToCollection(databaseURL, recipesCollection, recipeObject)

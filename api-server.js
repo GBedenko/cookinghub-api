@@ -61,7 +61,7 @@ app.head('/api/v1.0/login', async(req, res) => {
 
 	// // Using authentication module, check if the user exists for not
 	// const userExists = await authentication.checkAuthorizationHeader(authorizationHeader)
-	
+
 	// if(userExists) {
 	// 	// If user exists, return status 200
 	// 	res.status(httpStatus.OK).send()
@@ -81,8 +81,13 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
-	// Respond with appropiate status code and body as results array of objects from the query
-	res.status(httpStatus.OK).send(recipes)
+	if(recipes.length >= 1) {
+		// Respond with appropiate status code and body as results array of objects from the query
+		res.status(httpStatus.OK).send(recipes)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -95,8 +100,14 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	// Call controller to retrieve one recipe using the provided id
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
-	// Respond with appropiate status code and body as result object of the query
-	res.status(httpStatus.OK).send(recipe)
+	if(recipe) {
+		// Respond with appropiate status code and body as result object of the query
+		res.status(httpStatus.OK).send(recipe)
+	} else {
+		console.log('not fond')
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -185,8 +196,13 @@ app.get('/api/v1.0/users', async(req, res) => {
 	// Call controller to retrieve all users for the client's query
 	const users = await usersController.getAll(req.query)
 
-	// Respond with appropiate status code and body as results array of objects from the query
-	res.status(httpStatus.OK).send(users)
+	if(users.length >= 1) {
+		// Respond with appropiate status code and body as results array of objects from the query
+		res.status(httpStatus.OK).send(users)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -199,8 +215,13 @@ app.get('/api/v1.0/users/:user_id', async(req, res) => {
 	// Call controller to retrieve one user using the provided id
 	const user = await usersController.getById(req.params.user_id)
 
-	// Respond with appropiate status code and body as result object of the query
-	res.status(httpStatus.OK).send(user)
+	if(user.length >= 1) {
+		// Respond with appropiate status code and body as result object of the query
+		res.status(httpStatus.OK).send(user)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
