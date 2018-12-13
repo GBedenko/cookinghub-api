@@ -23,6 +23,8 @@ app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+const cors = require('cors')
+
 // Import package used to assign status codes for responses easily
 const httpStatus = require('http-status-codes')
 
@@ -37,30 +39,12 @@ const recipesController = require('./modules/recipes-controller')
 const usersController = require('./modules/users-controller')
 const authentication = require('./modules/authentication')
 
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*')
-	res.header('Access-Control-Allow-Headers', '*')
-	res.header('Content-Type', 'application/json')
-	next()
-})
+// Set server's response header allow requests from any host, to allow request headers
+// and will return json content type
+app.use(cors())
 
-// app.all('*',function(req,res,next){
-//     if(req.isAuthenticated()){
-//         next();
-//     }else{
-//         next(new Error(401)); // 401 Not Authorized
-//     }
-// })
-
-// app.use((err,req,res,next) => {
-//     // Just basic, should be filled out to next()
-//     // or respond on all possible code paths
-//     if(err instanceof Error){
-//         if(err.message === '401'){
-//             res.render('error401');
-//         }
-//     }
-// })
+// Every client request must use the middleware module to check the user is authorized
+app.use(authentication.checkAuthorizationHeaderMiddleware)
 
 /**
  * HEAD Request to login and authenticate a user using a client's request authorization header
@@ -69,19 +53,22 @@ app.use((req, res, next) => {
  */
 app.head('/api/v1.0/login', async(req, res) => {
 
-	// Retrieve the authorization credentials used by the client's request
-	const authorizationHeader = req.get('Authorization')
+	// Send 200 status code as request would have passed middleware to get to this endpoint
+	res.status(httpStatus.OK).send()
 
-	// Using authentication module, check if the user exists for not
-	const userExists = await authentication.checkUserCredentials(authorizationHeader)
+	// // Retrieve the authorization credentials used by the client's request
+	// const authorizationHeader = req.get('Authorization')
 
-	if(userExists) {
-		// If user exists, return status 200
-		res.status(httpStatus.OK).send()
-	} else {
-		// If user doesn't exist, return status 401
-		res.status(httpStatus.UNAUTHORIZED).send()
-	}
+	// // Using authentication module, check if the user exists for not
+	// const userExists = await authentication.checkAuthorizationHeader(authorizationHeader)
+
+	// if(userExists) {
+	// 	// If user exists, return status 200
+	// 	res.status(httpStatus.OK).send()
+	// } else {
+	// 	// If user doesn't exist, return status 401
+	// 	res.status(httpStatus.UNAUTHORIZED).send()
+	// }
 })
 
 /**
@@ -94,8 +81,13 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
-	// Respond with appropiate status code and body as results array of objects from the query
-	res.status(httpStatus.OK).send(recipes)
+	if(recipes.length >= 1) {
+		// Respond with appropiate status code and body as results array of objects from the query
+		res.status(httpStatus.OK).send(recipes)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -108,8 +100,14 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	// Call controller to retrieve one recipe using the provided id
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
-	// Respond with appropiate status code and body as result object of the query
-	res.status(httpStatus.OK).send(recipe)
+	if(recipe) {
+		// Respond with appropiate status code and body as result object of the query
+		res.status(httpStatus.OK).send(recipe)
+	} else {
+		console.log('not fond')
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -198,8 +196,13 @@ app.get('/api/v1.0/users', async(req, res) => {
 	// Call controller to retrieve all users for the client's query
 	const users = await usersController.getAll(req.query)
 
-	// Respond with appropiate status code and body as results array of objects from the query
-	res.status(httpStatus.OK).send(users)
+	if(users.length >= 1) {
+		// Respond with appropiate status code and body as results array of objects from the query
+		res.status(httpStatus.OK).send(users)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
@@ -212,8 +215,13 @@ app.get('/api/v1.0/users/:user_id', async(req, res) => {
 	// Call controller to retrieve one user using the provided id
 	const user = await usersController.getById(req.params.user_id)
 
-	// Respond with appropiate status code and body as result object of the query
-	res.status(httpStatus.OK).send(user)
+	if(user.length >= 1) {
+		// Respond with appropiate status code and body as result object of the query
+		res.status(httpStatus.OK).send(user)
+	} else {
+		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
+		res.status(httpStatus.NOT_FOUND).send()
+	}
 })
 
 /**
