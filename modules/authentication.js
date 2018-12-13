@@ -35,7 +35,7 @@ const checkUserCredentials = async(authorizationHeader) => {
 	if(existingUser.length > 0) {
 
 		// Compare the password the user entered with the one stored in db for the user
-		const passwordCorrect = await bcrypt.compare(password, existingUser[0].passwordHash)
+		const passwordCorrect = await bcrypt.compare(password, existingUser[0].password)
 
 		if(passwordCorrect) {
 			return true
