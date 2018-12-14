@@ -88,13 +88,8 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
-	if(recipes.length >= 1) {
-		// Respond with appropiate status code and body as results array of objects from the query
-		res.status(httpStatus.OK).send(recipes)
-	} else {
-		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
-		res.status(httpStatus.NOT_FOUND).send()
-	}
+	// Respond with appropiate status code and body as results array of objects from the query
+	res.status(httpStatus.OK).send(recipes)
 })
 
 /**
@@ -107,13 +102,8 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 	// Call controller to retrieve one recipe using the provided id
 	const recipe = await recipesController.getById(req.params.recipe_id)
 
-	if(recipe) {
-		// Respond with appropiate status code and body as result object of the query
-		res.status(httpStatus.OK).send(recipe)
-	} else {
-		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
-		res.status(httpStatus.NOT_FOUND).send()
-	}
+	// Respond with appropiate status code and body as result object of the query
+	res.status(httpStatus.OK).send(recipe)
 })
 
 /**
@@ -208,15 +198,10 @@ app.delete('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 app.get('/api/v1.0/users', async(req, res) => {
 
 	// Call controller to retrieve all users for the client's query
-	const users = await usersController.getAll(req.query)
+	const users = await usersController.getAll(req.body)
 
-	if(users.length >= 1) {
-		// Respond with appropiate status code and body as results array of objects from the query
-		res.status(httpStatus.OK).send(users)
-	} else {
-		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
-		res.status(httpStatus.NOT_FOUND).send()
-	}
+	// Respond with appropiate status code and body as results array of objects from the query
+	res.status(httpStatus.OK).send(users)
 })
 
 /**
@@ -229,13 +214,8 @@ app.get('/api/v1.0/users/:user_id', async(req, res) => {
 	// Call controller to retrieve one user using the provided id
 	const user = await usersController.getById(req.params.user_id)
 
-	if(user.length >= 1) {
-		// Respond with appropiate status code and body as result object of the query
-		res.status(httpStatus.OK).send(user)
-	} else {
-		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
-		res.status(httpStatus.NOT_FOUND).send()
-	}
+	// Respond with appropiate status code and body as result object of the query
+	res.status(httpStatus.OK).send(user)
 })
 
 /**
@@ -306,6 +286,7 @@ app.get('/api/v1.0/ratings', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const ratings = await ratingsController.getAll()
 
+	// Respond with appropiate status code and body as results array of objects from the query
 	res.status(httpStatus.OK).send(ratings)
 })
 
@@ -319,6 +300,7 @@ app.get('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	// Call controller to retrieve one rating
 	const rating = await ratingsController.getById(req.params.rating_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(rating)
 })
 
@@ -333,9 +315,11 @@ app.post('/api/v1.0/ratings', async(req, res) => {
 	const response = await ratingsController.add(req.body)
 
 	if(response) {
-		res.status(httpStatus.OK).send('Rating added succesfully\n')
+		// If adding rating was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', ratingAddedSuccessfully: response})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting your rating\n')
+		// If adding rating was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingAddedSuccessfully: response})
 	}
 })
 
@@ -350,9 +334,9 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingUpdateResponse = await ratingsController.update(req.params.rating_id, req.body)
 
 	if(ratingUpdateResponse) {
-		res.status(httpStatus.OK).send('Rating with id: ' + req.params.rating_id + ' has been updated\n')
+		res.status(httpStatus.OK).send({status: 'success', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your rating\n')
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	}
 })
 
@@ -387,9 +371,9 @@ app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingDeleteResponse = await ratingsController.delete(req.params.rating_id)
 
 	if(ratingDeleteResponse) {
-		res.status(httpStatus.OK).send('Rating with id: ' + req.params.rating_id + ' has been deleted\n')
+		res.status(httpStatus.OK).send({status: 'success', ratingDeletedSuccessfully: ratingDeleteResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your rating\n')
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingDeletedSuccessfully: ratingDeleteResponse})
 	}
 })
 
