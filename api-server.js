@@ -49,6 +49,8 @@ app.use(cors())
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/users', async(req, res) => {
+	// Post users doesn't use middleware because its the endpoint to register a
+	// new account (only one that is available with user being authorized)
 
 	// Call controller to create a new user using the provided request body
 	const addUserResponse = await usersController.add(req.body)
@@ -62,7 +64,7 @@ app.post('/api/v1.0/users', async(req, res) => {
 	}
 })
 
-// Every client request must use the middleware module to check the user is authorized
+// Every client request, below this statement, must use the middleware module to check the user is authorized
 app.use(authentication.checkAuthorizationHeaderMiddleware)
 
 /**
@@ -125,7 +127,7 @@ app.post('/api/v1.0/recipes', async(req, res) => {
 	const user = await authentication.retrieveUserFromAuthorizationHeader(req.get('Authorization'))
 
 	// If user is not a creator, send 401 status code as they aren't allowed to create a recipe
-	if(user.roles.find('creator') == undefined) {
+	if(user[0].role != 'creator') {
 		res.status(httpStatus.UNAUTHORIZED).send()
 	}
 
