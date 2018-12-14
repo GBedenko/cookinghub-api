@@ -334,8 +334,10 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingUpdateResponse = await ratingsController.update(req.params.rating_id, req.body)
 
 	if(ratingUpdateResponse) {
+		// If updating rating was successful, return 200 status code and object confirming request response
 		res.status(httpStatus.OK).send({status: 'success', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	} else {
+		// If updating rating was unsuccessful, return 400 status code and object confirming request response
 		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	}
 })
@@ -371,8 +373,10 @@ app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingDeleteResponse = await ratingsController.delete(req.params.rating_id)
 
 	if(ratingDeleteResponse) {
+		// If deleting rating was successful, return 200 status code and object confirming request response
 		res.status(httpStatus.OK).send({status: 'success', ratingDeletedSuccessfully: ratingDeleteResponse})
 	} else {
+		// If deleting rating was unsuccessful, return 400 status code and object confirming request response
 		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingDeletedSuccessfully: ratingDeleteResponse})
 	}
 })
@@ -388,6 +392,7 @@ app.get('/api/v1.0/images', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const images = await imagesController.getAll()
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(images)
 })
 
@@ -401,6 +406,7 @@ app.get('/api/v1.0/images/:image_id', async(req, res) => {
 	// Call controller to retrieve one image
 	const image = await imagesController.getById(req.params.image_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(image)
 })
 
@@ -412,12 +418,14 @@ app.get('/api/v1.0/images/:image_id', async(req, res) => {
 app.post('/api/v1.0/images', async(req, res) => {
 
 	// Call controller to create a new image from the provided request
-	const response = await imagesController.add(req.body)
+	const addImageResponse = await imagesController.add(req.body)
 
-	if(response) {
-		res.status(httpStatus.OK).send('image added succesfully\n')
+	if(addImageResponse) {
+		// If adding image was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', imageAddedSuccessfully: addImageResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting your image\n')
+		// If adding image was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', imageAddedSuccessfully: addImageResponse})
 	}
 })
 
@@ -432,9 +440,11 @@ app.put('/api/v1.0/images/:image_id', async(req, res) => {
 	const imageUpdateResponse = await imagesController.update(req.params.image_id, req.body)
 
 	if(imageUpdateResponse) {
-		res.status(httpStatus.OK).send('image with id: ' + req.params.image_id + ' has been updated\n')
+		// If updating image was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', imageUpdatedSuccessfully: imageUpdateResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your image\n')
+		// If updating image was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', imageUpdatedSuccessfully: imageUpdateResponse})
 	}
 })
 
@@ -469,9 +479,11 @@ app.delete('/api/v1.0/images/:image_id', async(req, res) => {
 	const imageDeleteResponse = await imagesController.delete(req.params.image_id)
 
 	if(imageDeleteResponse) {
-		res.status(httpStatus.OK).send('image with id: ' + req.params.image_id + ' has been deleted\n')
+		// If deleting image was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', imageDeletedSuccessfully: imageDeleteResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your image\n')
+		// If deleting image was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', imageDeletedSuccessfully: imageDeleteResponse})
 	}
 })
 
@@ -486,6 +498,7 @@ app.get('/api/v1.0/notifications', async(req, res) => {
 	// Waits for response from controller before continuing (async/await)
 	const notifications = await notificationsController.getAll()
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(notifications)
 })
 
@@ -499,6 +512,7 @@ app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	// Call controller to retrieve one notification
 	const notification = await notificationsController.getById(req.params.notification_id)
 
+	// Respond with appropiate status code and body as result object of the query
 	res.status(httpStatus.OK).send(notification)
 })
 
@@ -510,12 +524,14 @@ app.get('/api/v1.0/notifications/:notification_id', async(req, res) => {
 app.post('/api/v1.0/notifications', async(req, res) => {
 
 	// Call controller to create a new notification from the provided request
-	const response = await notificationsController.add(req.body)
+	const addNotificationResponse = await notificationsController.add(req.body)
 
-	if(response) {
-		res.status(httpStatus.OK).send('notification added succesfully\n')
+	if(addNotificationResponse) {
+		// If adding notification was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', notificationAddedSuccessfully: addNotificationResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error posting your notification\n')
+		// If adding notification was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', notificationAddedSuccessfully: addNotificationResponse})
 	}
 })
 
@@ -530,9 +546,11 @@ app.put('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	const notificationUpdateResponse = await notificationsController.update(req.params.notification_id, req.body)
 
 	if(notificationUpdateResponse) {
-		res.status(httpStatus.OK).send('notification with id: ' + req.params.notification_id + ' has been updated\n')
+		// If updating notification was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', notificationUpdatedSuccessfully: notificationUpdateResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your notification\n')
+		// If updating notification was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', notificationUpdatedSuccessfully: notificationUpdateResponse})
 	}
 })
 
@@ -567,9 +585,11 @@ app.delete('/api/v1.0/notifications/:notification_id', async(req, res) => {
 	const notificationDeleteResponse = await notificationsController.delete(req.params.notification_id)
 
 	if(notificationDeleteResponse) {
-		res.status(httpStatus.OK).send('notification with id: ' + req.params.notification_id + ' has been deleted\n')
+		// If deleting notification was successful, return 200 status code and object confirming request response
+		res.status(httpStatus.OK).send({status: 'success', notificationDeletedSuccessfully: notificationDeleteResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your notification\n')
+		// If deleting notification was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', notificationDeletedSuccessfully: notificationDeleteResponse})
 	}
 })
 
