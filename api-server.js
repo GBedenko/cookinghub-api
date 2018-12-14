@@ -334,9 +334,9 @@ app.put('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingUpdateResponse = await ratingsController.update(req.params.rating_id, req.body)
 
 	if(ratingUpdateResponse) {
-		res.status(httpStatus.OK).send('Rating with id: ' + req.params.rating_id + ' has been updated\n')
+		res.status(httpStatus.OK).send({status: 'success', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error updating your rating\n')
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingUpdatedSuccessfully: ratingUpdateResponse})
 	}
 })
 
@@ -371,9 +371,9 @@ app.delete('/api/v1.0/ratings/:rating_id', async(req, res) => {
 	const ratingDeleteResponse = await ratingsController.delete(req.params.rating_id)
 
 	if(ratingDeleteResponse) {
-		res.status(httpStatus.OK).send('Rating with id: ' + req.params.rating_id + ' has been deleted\n')
+		res.status(httpStatus.OK).send({status: 'success', ratingDeletedSuccessfully: ratingDeleteResponse})
 	} else {
-		res.status(httpStatus.BAD_REQUEST).send('There was an error deleting your rating\n')
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', ratingDeletedSuccessfully: ratingDeleteResponse})
 	}
 })
 
