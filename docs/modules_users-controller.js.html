@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: modules/users-controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: modules/users-controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict'
+
+/** Users Controller module
+ * @module modules/users-controller
+ * @requires modules/mongodb-database
+ */
+
+// Define database attributes that this controller will use
+const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
+const usersCollection = 'users'
+
+// Import module which handles database interactions
+const database = require('./mongodb-database')
+
+/**
+ * Requests and validates a request to add a new user
+ * @param {Object} userObject - Object representing a new user you want to add
+ * @returns {Object} Result of request if it was successful or not
+ */
+exports.add = async(userObject) => {
+
+	// Call database to insert new resource with the provided user object
+	const addUserResponse = await database.addResourceToCollection(databaseURL, usersCollection, userObject)
+		.then((result) => result) // Retrieve the promise's value if resolved
+
+	// Return the result of adding a new user (either true or error object)
+	return addUserResponse
+}
+
+/**
+ * Requests and validates a request to retrieve one user by its id
+ * @param {number} userId - ID of the user you want to retrieve
+ * @returns {Object} User object retrieved from the request
+ */
+exports.getById = async(userId) => {
+
+	// Call database to find one resource with the provided user id
+	const getUserResponse = await database.getResourceFromCollection(databaseURL, usersCollection, userId)
+		.then((user) => user) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
+
+	// Return result of finding one user (either user object or error object)
+	return getUserResponse
+}
+
+/**
+ * Requests and validates a request to retrieve all users or all users matching an optional query
+ * @param {Object} [paginationObject] - Optional query object for which users you want to request
+ * @returns {Array} Array of user objects retrieved from the request
+ */
+exports.getAll = async(searchObject) => {
+
+	// Set default values for pagination and sort filter as these aren't used for users queries
+	const paginationObject = {limit: 0, skip: 0}
+	const sortObject = {}
+
+	// Call database to find resources with the provided query object or no query object
+	const getAllUsersResponse = await database.getAllFromCollection(databaseURL, usersCollection, searchObject, paginationObject, sortObject)
+		.then((users) => users) // Retrieve the promise's value if resolved
+
+	// Return result of finding all users (either array of user objects or error object)
+	return getAllUsersResponse
+}
+
+/**
+ * Requests and validates a request to update a user with a new user object
+ * @param {number} userID - ID of the user you want to update
+ * @param {Object} newUserDetailsObject - User object you want to replace the existing user with
+ * @returns {Object} Result of request if it was successful or not
+ */
+exports.update = async(userID, newUserDetailsObject) => {
+
+	// Call database to update a resource with the provided id and new resource object
+	const updateUserResponse = await database.updateResource(databaseURL, usersCollection, userID, newUserDetailsObject)
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
+
+	// Return the result of updating the user (either true or error object)
+	return updateUserResponse
+}
+
+/**
+ * Requests and validates a request to delete a user
+ * @param {number} userID - ID of the user you want to delete
+ * @returns {Object} Result of request if it was successful or not
+ */
+exports.delete = async(userID) => {
+
+	// Call database to delete a resource with the provided id
+	const deleteUserResponse = await database.deleteResource(databaseURL, usersCollection, userID)
+		.then((result) => result) // Retrieve the promise's value if resolved
+		.catch((reason) => reason) // Handle the promise's value if rejected
+
+	// Return the result of deleting the user (either true or error object)
+	return deleteUserResponse
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-api-server.html">api-server</a></li><li><a href="module-modules_authentication.html">modules/authentication</a></li><li><a href="module-modules_images-controller.html">modules/images-controller</a></li><li><a href="module-modules_mongodb-database.html">modules/mongodb-database</a></li><li><a href="module-modules_notifications-controller.html">modules/notifications-controller</a></li><li><a href="module-modules_ratings-controller.html">modules/ratings-controller</a></li><li><a href="module-modules_recipes-controller.html">modules/recipes-controller</a></li><li><a href="module-modules_users-controller.html">modules/users-controller</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Dec 14 2018 14:48:23 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
