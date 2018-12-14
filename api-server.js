@@ -88,13 +88,9 @@ app.get('/api/v1.0/recipes', async(req, res) => {
 	// Call controller to retrieve all recipes for the client's query
 	const recipes = await recipesController.getAll(req.query)
 
-	if(recipes.length >= 1) {
-		// Respond with appropiate status code and body as results array of objects from the query
-		res.status(httpStatus.OK).send(recipes)
-	} else {
-		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
-		res.status(httpStatus.NOT_FOUND).send()
-	}
+	// Respond with appropiate status code and body as results array of objects from the query
+	res.status(httpStatus.OK).send(recipes)
+
 })
 
 /**
