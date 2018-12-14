@@ -43,7 +43,28 @@ const authentication = require('./modules/authentication')
 // and will return json content type
 app.use(cors())
 
-// Every client request must use the middleware module to check the user is authorized
+/**
+ * POST Request to create a new user
+ * @param {Object} req - HTTP request object from the client
+ * @param {Object} res - HTTP response object from the server
+ */
+app.post('/api/v1.0/users', async(req, res) => {
+	// Post users doesn't use middleware because its the endpoint to register a
+	// new account (only one that is available with user being authorized)
+
+	// Call controller to create a new user using the provided request body
+	const addUserResponse = await usersController.add(req.body)
+
+	if(addUserResponse) {
+		// If adding user was successful, return 201 status code and object confirming request response
+		res.status(httpStatus.CREATED).send({status: 'success', userAddedSuccessfully: addUserResponse})
+	} else {
+		// If adding user was unsuccessful, return 400 status code and object confirming request response
+		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userAddedSuccessfully: addUserResponse})
+	}
+})
+
+// Every client request, below this statement, must use the middleware module to check the user is authorized
 app.use(authentication.checkAuthorizationHeaderMiddleware)
 
 /**
@@ -55,20 +76,6 @@ app.head('/api/v1.0/login', async(req, res) => {
 
 	// Send 200 status code as request would have passed middleware to get to this endpoint
 	res.status(httpStatus.OK).send()
-
-	// // Retrieve the authorization credentials used by the client's request
-	// const authorizationHeader = req.get('Authorization')
-
-	// // Using authentication module, check if the user exists for not
-	// const userExists = await authentication.checkAuthorizationHeader(authorizationHeader)
-
-	// if(userExists) {
-	// 	// If user exists, return status 200
-	// 	res.status(httpStatus.OK).send()
-	// } else {
-	// 	// If user doesn't exist, return status 401
-	// 	res.status(httpStatus.UNAUTHORIZED).send()
-	// }
 })
 
 /**
@@ -104,7 +111,6 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
 		// Respond with appropiate status code and body as result object of the query
 		res.status(httpStatus.OK).send(recipe)
 	} else {
-		console.log('not fond')
 		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
 		res.status(httpStatus.NOT_FOUND).send()
 	}
@@ -116,6 +122,14 @@ app.get('/api/v1.0/recipes/:recipe_id', async(req, res) => {
  * @param {Object} res - HTTP response object from the server
  */
 app.post('/api/v1.0/recipes', async(req, res) => {
+
+	// Retrieve user object based on the client's authorization header
+	const user = await authentication.retrieveUserFromAuthorizationHeader(req.get('Authorization'))
+
+	// If user is not a creator, send 401 status code as they aren't allowed to create a recipe
+	if(user[0].role != 'creator') {
+		res.status(httpStatus.UNAUTHORIZED).send()
+	}
 
 	// Call controller to create a new recipe using the provided request body
 	const addRecipeResponse = await recipesController.add(req.body)
@@ -221,25 +235,6 @@ app.get('/api/v1.0/users/:user_id', async(req, res) => {
 	} else {
 		// If length is 0, then it returned an empty object, so resource not found/doesn't exist
 		res.status(httpStatus.NOT_FOUND).send()
-	}
-})
-
-/**
- * POST Request to create a new user
- * @param {Object} req - HTTP request object from the client
- * @param {Object} res - HTTP response object from the server
- */
-app.post('/api/v1.0/users', async(req, res) => {
-
-	// Call controller to create a new user using the provided request body
-	const addUserResponse = await usersController.add(req.body)
-
-	if(addUserResponse) {
-		// If adding user was successful, return 201 status code and object confirming request response
-		res.status(httpStatus.CREATED).send({status: 'success', userAddedSuccessfully: addUserResponse})
-	} else {
-		// If adding user was unsuccessful, return 400 status code and object confirming request response
-		res.status(httpStatus.BAD_REQUEST).send({status: 'fail', userAddedSuccessfully: addUserResponse})
 	}
 })
 

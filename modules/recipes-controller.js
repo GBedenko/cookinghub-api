@@ -23,6 +23,7 @@ exports.add = async(recipeObject) => {
 	recipeObject.likes = 0
 	recipeObject.dislikes = 0
 	recipeObject.created = new Date()
+	recipeObject.views = 0
 
 	// Call database to insert new resource with the provided recipe object
 	const addRecipeResponse = await database.addResourceToCollection(databaseURL, recipesCollection, recipeObject)
