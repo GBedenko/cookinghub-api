@@ -5,7 +5,7 @@
  * @requires modules/mongodb-database
  */
 
-const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
+const databaseURL = 'mongodb://localhost:27017/cookinghub'
 const imagesCollection = 'images'
 
 const database = require('./mongodb-database')

@@ -6,7 +6,7 @@ describe('Adding a new resource to a mongodb collection', async() => {
 
 	afterEach(async() => {
 		// Function to find the recipe that the tests will add to the database
-		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'},
 			{limit: 0, skip: 0},
@@ -19,7 +19,7 @@ describe('Adding a new resource to a mongodb collection', async() => {
 		const addedRecipeID = findAddedRecipeResponse[findAddedRecipeResponse.length-1]._id
 
 		// Delete the test recipe so that it doesn't affect live database
-		mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
+		mongoDB.deleteResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			addedRecipeID)
 	})
@@ -29,7 +29,7 @@ describe('Adding a new resource to a mongodb collection', async() => {
 		//expect.assertions(1)
 
 		// Send a test recipe object to the correct database
-		const response = await mongoDB.addResourceToCollection('mongodb://localhost:27017/yummy_recipes',
+		const response = await mongoDB.addResourceToCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'})
 
@@ -46,11 +46,11 @@ describe('Requesting one resource from a mongodb collection', async() => {
 
 	beforeEach(async() => {
 		// Add a new object to mongodb, which will be tested that it can retrieve the correct one
-		await mongoDB.addResourceToCollection('mongodb://localhost:27017/yummy_recipes',
+		await mongoDB.addResourceToCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'})
 
-		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'},
 			{limit: 0, skip: 0},
@@ -64,7 +64,7 @@ describe('Requesting one resource from a mongodb collection', async() => {
 
 	afterEach(async() => {
 		// Delete the test recipe so that it doesn't affect live database
-		mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
+		mongoDB.deleteResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToRequest)
 	})
@@ -74,7 +74,7 @@ describe('Requesting one resource from a mongodb collection', async() => {
 		//expect.assertions(1)
 
 		// Send a test recipe object to the correct database
-		const response = await mongoDB.getResourceFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const response = await mongoDB.getResourceFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToRequest).then((recipe) => recipe)
 
@@ -91,7 +91,7 @@ describe('Requesting all resources from a mongodb collection', async() => {
 
 		//expect.assertions(1)
 
-		const response = await mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const response = await mongoDB.getAllFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{},
 			{limit: 0, skip: 0},
@@ -108,11 +108,11 @@ describe('Updating a resource in a mongodb collection', async() => {
 
 	beforeEach(async() => {
 		// Add a new object to mongodb, which will be tested that it can be updated in the test
-		await mongoDB.addResourceToCollection('mongodb://localhost:27017/yummy_recipes',
+		await mongoDB.addResourceToCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'})
 
-		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'},
 			{limit: 0, skip: 0},
@@ -126,7 +126,7 @@ describe('Updating a resource in a mongodb collection', async() => {
 
 	afterEach(async() => {
 		// Delete the test recipe so that it doesn't affect live database
-		mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
+		mongoDB.deleteResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToUpdate)
 	})
@@ -135,7 +135,7 @@ describe('Updating a resource in a mongodb collection', async() => {
 
 		//expect.assertions(1)
 
-		const updateResponse = await mongoDB.updateResource('mongodb://localhost:27017/yummy_recipes',
+		const updateResponse = await mongoDB.updateResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToUpdate,
 			{'name': 'Updated Name'}).then((response) => response)
@@ -152,11 +152,11 @@ describe('Deleting a resource in a mongodb collection', async() => {
 
 	beforeEach(async() => {
 		// Add a new object to mongodb, which will be tested that it can be updated in the test
-		await mongoDB.addResourceToCollection('mongodb://localhost:27017/yummy_recipes',
+		await mongoDB.addResourceToCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'})
 
-		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/yummy_recipes',
+		const findAddedRecipe = mongoDB.getAllFromCollection('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			{'name': 'Test Recipe Name'},
 			{limit: 0, skip: 0},
@@ -170,7 +170,7 @@ describe('Deleting a resource in a mongodb collection', async() => {
 
 	afterEach(async() => {
 		// Delete the test recipe so that it doesn't affect live database
-		mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
+		mongoDB.deleteResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToDelete)
 	})
@@ -179,7 +179,7 @@ describe('Deleting a resource in a mongodb collection', async() => {
 
 		//expect.assertions(1)
 
-		const deleteResponse = await mongoDB.deleteResource('mongodb://localhost:27017/yummy_recipes',
+		const deleteResponse = await mongoDB.deleteResource('mongodb://localhost:27017/cookinghub',
 			'recipes',
 			resourceIdToDelete).then((response) => response)
 
@@ -194,7 +194,7 @@ describe('Requesting database interactions with incorrect credentials', async() 
     test('Adding a new resource with incorrect database credentials returns a rejected database connection', async done => {
         
         // Send a test resource object to the correct database
-        const response = await mongoDB.addResourceToCollection("mongodb://wrongurl:27017/yummy_recipes",
+        const response = await mongoDB.addResourceToCollection("mongodb://wrongurl:27017/cookinghub",
                                                                            "recipes",
                                                                            {"resource":"test resource"})
                                                                            .then((result) => result)
@@ -207,7 +207,7 @@ describe('Requesting database interactions with incorrect credentials', async() 
     
     test('Requesting a resource with incorrect database credentials returns a rejected database connection', async done => {
         
-        const response = await mongoDB.getResourceFromCollection("mongodb://wrongurl:27017/yummy_recipes",
+        const response = await mongoDB.getResourceFromCollection("mongodb://wrongurl:27017/cookinghub",
                                                                              "recipes",
                                                                              1234)
                                                                              .then((response) => response) 
@@ -220,7 +220,7 @@ describe('Requesting database interactions with incorrect credentials', async() 
     
     test('Requesting all resources with incorrect database credentials returns a rejected database connection', async done => {
         
-        const response = await mongoDB.getAllFromCollection("mongodb://wrongurl:27017/yummy_recipes",
+        const response = await mongoDB.getAllFromCollection("mongodb://wrongurl:27017/cookinghub",
                                                                              "recipes")
                                                                              .then((response) => response) 
                                                                              .catch((reason) => reason)      
@@ -232,7 +232,7 @@ describe('Requesting database interactions with incorrect credentials', async() 
     
     test('Updating a resource with incorrect database credentials returns a rejected database connection', async done => {
         
-        const response = await mongoDB.updateResource("mongodb://wrongurl:27017/yummy_recipes",
+        const response = await mongoDB.updateResource("mongodb://wrongurl:27017/cookinghub",
                                                                              "recipes",
                                                                              1234,
                                                                              {"resource":"updated resource"})
@@ -246,7 +246,7 @@ describe('Requesting database interactions with incorrect credentials', async() 
     
     test('Deleting a resource with incorrect database credentials returns a rejected database connection', async done => {
         
-        const response = await mongoDB.deleteResource("mongodb://wrongurl:27017/yummy_recipes",
+        const response = await mongoDB.deleteResource("mongodb://wrongurl:27017/cookinghub",
                                                                              "recipes",
                                                                              1234)
                                                                              .then((response) => response) 

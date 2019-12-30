@@ -10,7 +10,7 @@ const MongoClient = require('mongodb').MongoClient
 const mongodb = require('mongodb')
 
 // Name of the MongoDB database used for the application
-const databaseName = 'yummy_recipes_db'
+const databaseName = 'cookinghub_db'
 
 /**
  * Add one resource to MongoDB for the provided database and collection

@@ -1,7 +1,7 @@
 {
-  "name": "304cem-backend-development-genarobedenko-7060234",
+  "name": "cookinghub-api",
   "version": "1.0.0",
-  "description": "Backend API for 304CEM Coursework Assignment",
+  "description": "REST API for CookingHub",
   "main": "api-server.js",
   "scripts": {
     "start": "node api-server.js",
@@ -13,9 +13,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.coventry.ac.uk/304CEM-1819OCTJAN/304CEM-BACKEND-DEVELOPMENT-GenaroBedenko-7060234"
+    "url": "https://github.com/GBedenko/cookinghub-api"
   },
-  "author": "bedenkog",
+  "author": "GBedenko",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.2",

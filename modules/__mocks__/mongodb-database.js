@@ -5,7 +5,7 @@ const database = jest.genMockFromModule('../mongodb-database')
 // Mock adding one resource to provided collection
 database.addResourceToCollection = (databaseURL, collectionName, newResource) => new Promise((resolve, reject) => {
 
-	if(databaseURL == 'mongodb://localhost:27017/yummy_recipes' && collectionName != undefined) {
+	if(databaseURL == 'mongodb://localhost:27017/cookinghub' && collectionName != undefined) {
 
 		if(Object.keys(newResource).length == 0) {
 			reject(new Error('Trying to add an empty object'))
@@ -20,7 +20,7 @@ database.addResourceToCollection = (databaseURL, collectionName, newResource) =>
 // Mock retrieve all resources from a given collection
 database.getAllFromCollection = (databaseURL, collectionName) => new Promise((resolve, reject) => {
 
-	if(databaseURL == 'mongodb://localhost:27017/yummy_recipes' && collectionName != undefined) {
+	if(databaseURL == 'mongodb://localhost:27017/cookinghub' && collectionName != undefined) {
 		resolve([{'_id': 1234 , 'resource': 'test resource'}])
 	} else {
 		reject(new Error('Incorrect database details passed'))
@@ -32,7 +32,7 @@ database.getResourceFromCollection = (databaseURL, collectionName, resourceID) =
 
 	const mockedInvalidID = 6666
 
-	if(databaseURL == 'mongodb://localhost:27017/yummy_recipes' && collectionName != undefined) {
+	if(databaseURL == 'mongodb://localhost:27017/cookinghub' && collectionName != undefined) {
 
 		if(resourceID == mockedInvalidID) {
 			reject(new Error('Trying to request an object that doesnt exist'))
@@ -50,7 +50,7 @@ database.updateResource = (databaseURL, collectionName, resourceID, newValuesObj
 
 	const mockedInvalidID = 6666
 
-	if(databaseURL == 'mongodb://localhost:27017/yummy_recipes' && collectionName != undefined) {
+	if(databaseURL == 'mongodb://localhost:27017/cookinghub' && collectionName != undefined) {
 
 		if(Object.keys(newValuesObject).length == 0) {
 			reject(new Error('Trying to update an object with an empty object'))
@@ -72,7 +72,7 @@ database.deleteResource = (databaseURL, collectionName, resourceID) => new Promi
 
 	const mockedInvalidID = 6666
 
-	if(databaseURL == 'mongodb://localhost:27017/yummy_recipes' && collectionName != undefined) {
+	if(databaseURL == 'mongodb://localhost:27017/cookinghub' && collectionName != undefined) {
 
 		if(resourceID == mockedInvalidID) {
 			reject(new Error('Trying to request an object that doesnt exist'))

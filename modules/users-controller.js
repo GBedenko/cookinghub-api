@@ -6,7 +6,7 @@
  */
 
 // Define database attributes that this controller will use
-const databaseURL = 'mongodb://localhost:27017/yummy_recipes'
+const databaseURL = 'mongodb://localhost:27017/cookinghub'
 const usersCollection = 'users'
 
 // Import module which handles database interactions
