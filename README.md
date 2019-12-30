@@ -1,3 +1,35 @@
-# 304CEM-BACKEND-DEVELOPMENT-GenaroBedenko-7060234
+# cookinghub-api
 
-## Backend API for 304CEM Coursework Assignment - Yummy Recipes Blog
+REST API for CookingHub - a recipes sharing application
+
+## Prerequisites
+
+```console
+sudo apt install nodejs
+
+sudo apt install git
+```
+
+## Setup
+
+```console
+git clone https://github.com/GBedenko/cookinghub-api
+
+cd cookinghub-api
+
+npm install
+```
+
+## Start Server
+
+
+```console
+npm start
+```
+
+
+## Testing
+
+```console
+npm test
+```
